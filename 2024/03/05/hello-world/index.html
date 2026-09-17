@@ -4,8 +4,8 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="Hello World, simple life">
-    <meta name="description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hex">
+    <meta name="keywords" content="BossHunter, 求职, AI Agent, 部署实践, 简历管理, simple life">
+    <meta name="description" content="BossHunter 从环境搭建到完整链路打通的部署实践，含简历管理与定制简历生成">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -17,7 +17,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>Hello World | simple life</title>
+    <title>BossHunter 部署实践 | simple life</title>
     <link rel="icon" type="image/png" href="/favicon.png">
     
 
@@ -341,7 +341,7 @@
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">Hello World</h1>
+                    <h1 class="description center-align post-title">BossHunter 部署实践</h1>
                 </div>
             </div>
         </div>
@@ -377,7 +377,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2024-03-05
+2026-09-17
                 </div>
                 
 
@@ -398,23 +398,107 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></tbody></table></figure>
+                <p>BossHunter 是由 <a target="_blank" rel="noopener" href="https://github.com/shengjidaguai-china/BossHunter">shengjidaguai-china/BossHunter</a> 维护的本地智能求职 Agent 项目，版本 v2.4.0。本文记录了在 Windows + WSL2 环境下从零部署到跑通完整链路的实践过程。</p>
 
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></tbody></table></figure>
+<h2 id="项目简介">项目简介</h2>
+<p>BossHunter 实现了一套完整的求职自动化流程：</p>
+<ol>
+<li><strong>多平台岗位采集</strong> — 串行采集 BOSS 直聘、智联招聘、前程无忧 51job 和猎聘</li>
+<li><strong>AI 评分与筛选</strong> — 关键词预筛 + JD 深度评分</li>
+<li><strong>人工确认</strong> — 投递前必须审核确认</li>
+<li><strong>个性化招呼语</strong> — 根据 JD 和简历自动生成</li>
+<li><strong>低频安全发送</strong> — 随机间隔 + 时间窗口 + 每日上限</li>
+<li><strong>HR 回复监听</strong> — 实时监测投递后的回复</li>
+<li><strong>定制简历</strong> — 根据岗位 JD 辅助生成针对性简历</li>
+</ol>
 
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></tbody></table></figure>
+<blockquote>
+<p>⚠️ 自动化操作招聘平台存在账号限制或封禁风险。本项目仅供学习、研究和个人求职效率提升；请遵守平台规则，保持低频，并自行承担使用风险。</p>
+</blockquote>
 
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></tbody></table></figure>
+<h2 id="环境准备">环境准备</h2>
+<p>部署前需要准备以下环境：</p>
+<table>
+<thead>
+<tr><th>依赖</th><th>版本</th><th>用途</th></tr>
+</thead>
+<tbody>
+<tr><td>Python</td><td>3.10+</td><td>核心运行时</td></tr>
+<tr><td>Node.js</td><td>22+</td><td>Browser Runtime / CDP 代理</td></tr>
+<tr><td>Google Chrome</td><td>最新稳定版</td><td>连接已登录的招聘平台</td></tr>
+<tr><td>AI API Key</td><td>—</td><td>Anthropic 或 OpenAI 兼容接口</td></tr>
+</tbody>
+</table>
 
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+<h2 id="部署步骤">部署步骤</h2>
+<h3 id="1-安装依赖">1. 安装依赖</h3>
+<pre><code class="language-bash">git clone https://github.com/shengjidaguai-china/BossHunter.git
+cd BossHunter
+npm --prefix src/bosshunter/web/frontend ci
+npm --prefix src/bosshunter/web/frontend run build
+pip install -e .
+</code></pre>
 
-                
-            </div>
-            <hr/>
+<h3 id="2-开启-chrome-远程调试">2. 开启 Chrome 远程调试</h3>
+<pre><code class="language-bash"># Linux（推荐使用独立用户目录）
+google-chrome --remote-debugging-port=9222 --user-data-dir="$HOME/.bosshunter-chrome"
+</code></pre>
+<p>使用独立用户目录时，需要在这个 Chrome 窗口中登录要使用的招聘平台，并保持窗口开启。</p>
+
+<h3 id="3-完成本地配置">3. 完成本地配置</h3>
+<pre><code class="language-bash">bosshunter web
+</code></pre>
+<p>浏览器打开 <code>http://127.0.0.1:8686</code>，完成：</p>
+<ol>
+<li>上传自己的简历（.md、.docx 或带文字层的 .pdf）</li>
+<li>设置搜索关键词、目标城市、评分阈值</li>
+<li>配置 AI 服务商和 API Key（在面板中输入，不要提交到代码仓库）</li>
+</ol>
+
+<h3 id="4-检查连接">4. 检查连接</h3>
+<pre><code class="language-bash">bosshunter ai-status
+bosshunter connect
+</code></pre>
+
+<h3 id="5-运行">5. 运行</h3>
+<pre><code class="language-bash">bosshunter run
+</code></pre>
+<p>完整流程：采集岗位 → AI 评分 → 人工确认投递清单 → 生成招呼语 → 低频发送 → 监听回复。</p>
+
+<h2 id="实测结果">实测结果</h2>
+<table>
+<thead>
+<tr><th>项</th><th>值</th></tr>
+</thead>
+<tbody>
+<tr><td>采集岗位</td><td>92</td></tr>
+<tr><td>评分通过 / 过滤</td><td>76 / 16</td></tr>
+<tr><td>实测发送</td><td>5（人工确认）</td></tr>
+<tr><td>评分阈值</td><td>60（低匹配优先练手策略）</td></tr>
+</tbody>
+</table>
+
+<h2 id="简历管理">简历管理</h2>
+<p>项目本身支持 JD→定制简历，但缺少多简历管理和历史记录。为此自研了 <code>tools/resume_manager.py</code>：</p>
+<pre><code class="language-bash">resume-mgr list                                   # 基础简历列表（* 当前使用）
+resume-mgr import 简历.docx --use                 # 导入并设为当前
+resume-mgr use 简历.md                            # 切换简历
+resume-mgr tailor --jd jd.txt --title 岗位 --company 公司  # 生成定制简历
+cat jd.txt | resume-mgr tailor --jd -              # 支持 stdin
+resume-mgr history                                # 定制简历历史
+</code></pre>
+<p>自研工具复用了项目的 <code>bosshunter.ai.resume</code>（AI + 校验 + 渲染）和 <code>bosshunter.browser</code>（CDP），不重造生成逻辑。产物保存在 <code>data/resumes/</code> 下，包括 .md + .pdf + .png。</p>
+
+<h2 id="注意事项">注意事项</h2>
+<ol>
+<li>许可证为 PolyForm Noncommercial（<strong>非开源</strong>），仅限非商业用途</li>
+<li>仅 BOSS 直聘支持自动发送和监听；智联/51job/猎聘仅支持只读采集</li>
+<li>API Key 只在本地面板输入，不要发送到聊天、Issue 或提交文件中</li>
+<li>所有投递必须经过人工确认，不会在未经确认时发送</li>
+</ol>
+
+<p>详细部署步骤见 <a target="_blank" rel="noopener" href="https://github.com/atcXiGua/personal/tree/main/bosshunter/setup/SETUP.md">个人仓库 setup/SETUP.md</a>，踩坑记录见 <a target="_blank" rel="noopener" href="https://github.com/atcXiGua/personal/tree/main/bosshunter/LESSONS.md">LESSONS.md</a>。</p>
+            
 
             
 
@@ -560,9 +644,9 @@
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/12.jpg" class="responsive-img" alt="Hello World">
+                        <img src="/medias/featureimages/12.jpg" class="responsive-img" alt="BossHunter 部署实践">
                         
-                        <span class="card-title">Hello World</span>
+                        <span class="card-title">BossHunter 部署实践</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -573,7 +657,7 @@
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2024-03-05
+                                <i class="far fa-clock fa-fw icon-date"></i>2026-09-17
                             </span>
                         <span class="publish-author">
                             
@@ -598,9 +682,9 @@
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/12.jpg" class="responsive-img" alt="Hello World">
+                        <img src="/medias/featureimages/12.jpg" class="responsive-img" alt="BossHunter 部署实践">
                         
-                        <span class="card-title">Hello World</span>
+                        <span class="card-title">BossHunter 部署实践</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -611,7 +695,7 @@
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2024-03-05
+                                <i class="far fa-clock fa-fw icon-date"></i>2026-09-17
                             </span>
                         <span class="publish-author">
                             
