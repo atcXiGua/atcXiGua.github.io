@@ -107,7 +107,7 @@ description: SEO 描述
 
 必填 `title` / `slug` / `date` / `cover`；封面图在 `medias/featureimages/` 里选已有的（0-23.jpg）。
 
-**md2html.py 支持的 Markdown 子集**：ATX 标题（`##`/`###`/`####`，自动生成 hexo 风格锚点）、围栏代码块（` ```lang `）、GFM 表格、引用、有序/无序列表、加粗、行内代码、链接、图片、分隔线、**标签平衡的多行 raw HTML 块**（整体透传）。
+**md2html.py 支持的 Markdown 子集**：ATX 标题（`##`/`###`/`####`，自动生成 hexo 风格锚点）、围栏代码块（输出 `<pre class="line-numbers language-lang"><code class="language-lang">`，前端由 Prism.js 语法高亮 + 行号 + 语言标签）、GFM 表格、引用、有序/无序列表、加粗、行内代码、链接、图片、分隔线、**标签平衡的多行 raw HTML 块**（整体透传）。
 
 ## 串起来：一次完整的"对话变文章"
 
@@ -140,6 +140,7 @@ python3 -m http.server 8765 --bind 127.0.0.1   # 在博客根目录执行
 
 - `#toc-aside` 的父元素是 `.row`，且与 `#main-content` 不重叠（目录栏错位是最常见的坑）
 - `#articleContent` 内 `pre` / `code` 标签开闭数量一致
+- 代码块左上角有语言标签、左侧有行号、关键字有语法着色（Prism）
 - `#prenext-posts .article` 数量为 2（上/下一篇）
 - 首页卡片数 == 文章数；归档页 timeline 块数 == 文章数
 - 控制台无 JS 报错
@@ -152,6 +153,9 @@ python3 -m http.server 8765 --bind 127.0.0.1   # 在博客根目录执行
 | frontmatter 列表项为空 | 空标签的页面路径退化为 `tags/index.html`，覆盖标签云首页 | 解析时空值不进入标签列表；发布前确认 tags/categories 无空项 |
 | `#toc-aside` 不是 `.row` 直接子元素 | 目录栏错位、遮挡正文 | 从站点现有页面提取模板后，用 HTML 解析器校验祖先链是 `main.post-container > .row` |
 | 围栏代码块内的空行 | 被当成段落分隔，代码块中间长出 `<p>` | 转换器已修；源文件里代码块保持原样即可 |
+| 代码块语言标签为空 | Matery 的 `codeLang.js` 从 `<pre>` 的 class 读语言 | 类名输出在 `<pre>` 上（`line-numbers language-xxx`），不能只在 `<code>` 上 |
+| 代码块长行横向溢出 | 视觉上超出代码块边界 | `css/my.css` 里 `pre/pre code` 加 `white-space: pre-wrap` + `overflow-wrap: anywhere` |
+| 文章页"文章链接"写死 | reprint 区链接指向别的文章 | 模板里用 `{{PERMALINK}}` 占位符 |
 | 文章日期格式 | 排序/归档页年月错 | 一律 `YYYY-MM-DD` |
 | `http.server` 会话不持久 | 每次 bash 调用 workdir 会重置 | 启动服务时指定 `workdir`，或每次 `cd` 后再执行 |
 | opencode skill 不触发 | description 写得不像场景 | description 里写清"什么时候用 + 用户会怎么说"，中英文都写 |

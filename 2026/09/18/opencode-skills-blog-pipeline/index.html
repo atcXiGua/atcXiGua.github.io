@@ -32,7 +32,6 @@
 <link rel="stylesheet" type="text/css" href="/libs/animate/animate.min.css">
 <link rel="stylesheet" type="text/css" href="/libs/lightGallery/css/lightgallery.min.css">
 <link rel="stylesheet" type="text/css" href="/css/matery.css">
-<link rel="stylesheet" type="text/css" href="/css/my.css">
 <link rel="stylesheet" type="text/css" href="/css/dark.css" media="none" onload="if(media!='all')media='all'">
 
 
@@ -40,6 +39,7 @@
 
     <link rel="stylesheet" href="/libs/tocbot/tocbot.css">
     <link rel="stylesheet" href="/libs/prism/prism.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/my.css">
     <link rel="stylesheet" href="/css/post.css">
 
 
@@ -445,7 +445,7 @@ description: SEO 描述
 
 正文（Markdown）……</code></pre>
 <p>必填 <code>title</code> / <code>slug</code> / <code>date</code> / <code>cover</code>；封面图在 <code>medias/featureimages/</code> 里选已有的（0-23.jpg）。</p>
-<p><strong>md2html.py 支持的 Markdown 子集</strong>：ATX 标题（<code>##</code>/<code>###</code>/<code>####</code>，自动生成 hexo 风格锚点）、围栏代码块（<code> </code>`<code>lang </code>）、GFM 表格、引用、有序/无序列表、加粗、行内代码、链接、图片、分隔线、<strong>标签平衡的多行 raw HTML 块</strong>（整体透传）。</p>
+<p><strong>md2html.py 支持的 Markdown 子集</strong>：ATX 标题（<code>##</code>/<code>###</code>/<code>####</code>，自动生成 hexo 风格锚点）、围栏代码块（输出 <code>&lt;pre class="line-numbers language-lang"&gt;&lt;code class="language-lang"&gt;</code>，前端由 Prism.js 语法高亮 + 行号 + 语言标签）、GFM 表格、引用、有序/无序列表、加粗、行内代码、链接、图片、分隔线、<strong>标签平衡的多行 raw HTML 块</strong>（整体透传）。</p>
 <h2 id="串起来：一次完整的"对话变文章""><a href="#串起来：一次完整的"对话变文章"" class="headerlink" title="串起来：一次完整的"对话变文章""></a>串起来：一次完整的"对话变文章"</h2>
 <pre class="line-numbers language-bash"><code class="language-bash"># 1. 提取对话
 python3 ~/.config/opencode/skills/chatgpt-conversation-extract/extract_chatgpt.py \
@@ -468,6 +468,7 @@ python3 .posts/publish.py git --blog /mnt/d/tmp/blog</code></pre>
 <ul>
 <li><code>#toc-aside</code> 的父元素是 <code>.row</code>，且与 <code>#main-content</code> 不重叠（目录栏错位是最常见的坑）</li>
 <li><code>#articleContent</code> 内 <code>pre</code> / <code>code</code> 标签开闭数量一致</li>
+<li>代码块左上角有语言标签、左侧有行号、关键字有语法着色（Prism）</li>
 <li><code>#prenext-posts .article</code> 数量为 2（上/下一篇）</li>
 <li>首页卡片数 == 文章数；归档页 timeline 块数 == 文章数</li>
 <li>控制台无 JS 报错</li>
@@ -482,6 +483,9 @@ python3 .posts/publish.py git --blog /mnt/d/tmp/blog</code></pre>
 <tr><td>frontmatter 列表项为空</td><td>空标签的页面路径退化为 <code>tags/index.html</code>，覆盖标签云首页</td><td>解析时空值不进入标签列表；发布前确认 tags/categories 无空项</td></tr>
 <tr><td><code>#toc-aside</code> 不是 <code>.row</code> 直接子元素</td><td>目录栏错位、遮挡正文</td><td>从站点现有页面提取模板后，用 HTML 解析器校验祖先链是 <code>main.post-container &gt; .row</code></td></tr>
 <tr><td>围栏代码块内的空行</td><td>被当成段落分隔，代码块中间长出 <code>&lt;p&gt;</code></td><td>转换器已修；源文件里代码块保持原样即可</td></tr>
+<tr><td>代码块语言标签为空</td><td>Matery 的 <code>codeLang.js</code> 从 <code>&lt;pre&gt;</code> 的 class 读语言</td><td>类名输出在 <code>&lt;pre&gt;</code> 上（<code>line-numbers language-xxx</code>），不能只在 <code>&lt;code&gt;</code> 上</td></tr>
+<tr><td>代码块长行横向溢出</td><td>视觉上超出代码块边界</td><td><code>css/my.css</code> 里 <code>pre/pre code</code> 加 <code>white-space: pre-wrap</code> + <code>overflow-wrap: anywhere</code></td></tr>
+<tr><td>文章页"文章链接"写死</td><td>reprint 区链接指向别的文章</td><td>模板里用 <code>https://atcxigua.github.io/2026/09/18/opencode-skills-blog-pipeline/</code> 占位符</td></tr>
 <tr><td>文章日期格式</td><td>排序/归档页年月错</td><td>一律 <code>YYYY-MM-DD</code></td></tr>
 <tr><td><code>http.server</code> 会话不持久</td><td>每次 bash 调用 workdir 会重置</td><td>启动服务时指定 <code>workdir</code>，或每次 <code>cd</code> 后再执行</td></tr>
 <tr><td>opencode skill 不触发</td><td>description 写得不像场景</td><td>description 里写清"什么时候用 + 用户会怎么说"，中英文都写</td></tr>

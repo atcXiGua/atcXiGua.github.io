@@ -1,12 +1,10 @@
 /* Here is your custom css styles. */
 
 
-/* 代码块长行自动换行，避免横向溢出 */
-pre {
-    white-space: pre-wrap;
-    word-break: break-all;
-    overflow-wrap: anywhere;
-}
+/* 代码块长行自动换行，避免横向溢出（优先级需高于 Prism 的 pre[class*=language-]） */
+pre,
+pre[class*="language-"],
+pre[class*="language-"] code,
 pre code {
     white-space: pre-wrap;
     word-break: break-all;
