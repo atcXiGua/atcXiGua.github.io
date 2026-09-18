@@ -4,8 +4,8 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="simple life">
-    <meta name="description" content="simple life">
+    <meta name="keywords" content="BossHunter, 求职, AI Agent, BossHunter 部署实践, simple life">
+    <meta name="description" content="BossHunter 从环境搭建到完整链路打通的部署实践，含简历管理与定制简历生成">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -17,53 +17,12 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>simple life</title>
+    <title>BossHunter 部署实践 | simple life</title>
     <link rel="icon" type="image/png" href="/favicon.png">
     
 
 
-    <!-- index cover -->
-    <!-- <link rel="stylesheet preload" type="text/css" href="/css/indexcover.css"> -->
-    <style>
-        .carousel-control {
-            width: 45px;
-            height: 45px;
-            line-height: 55px;
-            border-radius: 45px;
-            background: transparent;
-            cursor: pointer;
-            z-index: 100;
-        }
-        
-        #prev-cover {
-            position: absolute;
-            top: 48%;
-            left: 8px;
-        }
-        
-        #next-cover {
-            position: absolute;
-            top: 48%;
-            right: 8px;
-        }
-        
-        #prev-cover i {
-            margin-right: 3px;
-        }
-        
-        #next-cover i {
-            margin-left: 3px;
-        }
-        
-        .carousel-control:hover {
-            background-color: rgba(0, 0, 0, .4);
-        }
-        
-        .carousel-control i {
-            color: #fff;
-            font-size: 2.4rem;
-        }
-    </style>
+    <!-- bg-cover style     -->
 
 
 
@@ -84,6 +43,10 @@
 
 
 
+
+    
+        <link rel="stylesheet" type="text/css" href="/css/reward.css">
+    
 
 
 
@@ -351,308 +314,449 @@
     
 
 
-<div class="carousel carousel-slider center index-cover" data-indicators="true" style="margin-top: -64px;">
-    
 
-    <div class="carousel-item  white-text bg-cover about-cover">
-        <div class="container">
-            <div class="row">
-    <div class="col s10 offset-s1 m8 offset-m2 l8 offset-l2">
-        <div class="brand">
-            <div class="title center-align">
-                
-                    simple life
-                
-            </div>
-
-            <div class="description center-align">
-                
-                <span id="subtitle"></span>
-                <script src="/libs/typed/typed.js"></script>
-                <script>
-                    var typed = new Typed("#subtitle", {
-                        strings: [ 
-                            
-                                "从来没有真正的绝境, 只有心灵的迷途",
-                            
-                                "Never really desperate, only the lost of the soul",
-                            
-                        ],
-                        startDelay: 300,
-                        typeSpeed: 100,
-                        loop: true,
-                        backSpeed: 50,
-                        showCursor: true
-                    });
-                </script>
-                
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/1.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">BossHunter 部署实践</h1>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
 
-<script>
-    // 每天切换 banner 图.  Switch banner image every day.
-    var bannerUrl = "/medias/banner/" + new Date().getDay() + '.jpg';
-    $('.bg-cover').css('background-image', 'url(' + bannerUrl + ')');
-</script>
 
 
-
-            <div class="cover-btns">
-                <a href="#indexCard" class="waves-effect waves-light btn">
-                    <i class="fa fa-angle-double-down"></i>开始阅读
-                </a>
-
-                
-                    <a href="https://github.com/atcXiGua" class="waves-effect waves-light btn" target="_blank">
-                        <i class="fab fa-github-alt"></i>Github
-                    </a>
-                
-            </div>
-            <div class="cover-social-link">
-    <a href="https://github.com/atcXiGua" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
-        <i class="fab fa-github"></i>
-    </a>
-
-
-
-
-
-
-    <a href="/atom.xml" class="tooltipped" target="_blank" data-tooltip="RSS 订阅" data-position="top" data-delay="50">
-        <i class="fas fa-rss"></i>
-    </a>
-
-</div>
-        </div>
-    </div>
+<main class="post-container content">
 
     
+    <div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                                          <a href="/tags/BossHunter/"><span class="chip bg-color">BossHunter</span></a>
+                <a href="/tags/求职/"><span class="chip bg-color">求职</span></a>
+                <a href="/tags/AI Agent/"><span class="chip bg-color">AI Agent</span></a>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
+2026-09-17
+                </div>
+                
+
+                
+
+                
+
+                
+
+                
+            </div>
+        </div>
+        <hr class="clearfix">
+
+        
+
+        
+
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+<p>BossHunter 是由 <a target="_blank" rel="noopener" href="https://github.com/shengjidaguai-china/BossHunter">shengjidaguai-china/BossHunter</a> 维护的本地智能求职 Agent 项目，版本 v2.4.0。本文记录了在 Windows + WSL2 环境下从零部署到跑通完整链路的实践过程。</p>
+<h2 id="项目简介"><a href="#项目简介" class="headerlink" title="项目简介"></a>项目简介</h2>
+<p>BossHunter 实现了一套完整的求职自动化流程：</p>
+<ol>
+<li><strong>多平台岗位采集</strong> — 串行采集 BOSS 直聘、智联招聘、前程无忧 51job 和猎聘</li>
+<li><strong>AI 评分与筛选</strong> — 关键词预筛 + JD 深度评分</li>
+<li><strong>人工确认</strong> — 投递前必须审核确认</li>
+<li><strong>个性化招呼语</strong> — 根据 JD 和简历自动生成</li>
+<li><strong>低频安全发送</strong> — 随机间隔 + 时间窗口 + 每日上限</li>
+<li><strong>HR 回复监听</strong> — 实时监测投递后的回复</li>
+<li><strong>定制简历</strong> — 根据岗位 JD 辅助生成针对性简历</li>
+</ol>
+<blockquote><p>⚠️ 自动化操作招聘平台存在账号限制或封禁风险。本项目仅供学习、研究和个人求职效率提升；请遵守平台规则，保持低频，并自行承担使用风险。</p></blockquote>
+<h2 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h2>
+<p>部署前需要准备以下环境：</p>
+<table>
+<thead>
+<tr><th>依赖</th><th>版本</th><th>用途</th></tr>
+</thead>
+<tbody>
+<tr><td>Python</td><td>3.10+</td><td>核心运行时</td></tr>
+<tr><td>Node.js</td><td>22+</td><td>Browser Runtime / CDP 代理</td></tr>
+<tr><td>Google Chrome</td><td>最新稳定版</td><td>连接已登录的招聘平台</td></tr>
+<tr><td>AI API Key</td><td>—</td><td>Anthropic 或 OpenAI 兼容接口</td></tr>
+</tbody>
+</table>
+<h2 id="部署步骤"><a href="#部署步骤" class="headerlink" title="部署步骤"></a>部署步骤</h2>
+<h3 id="1.-安装依赖"><a href="#1.-安装依赖" class="headerlink" title="1. 安装依赖"></a>1. 安装依赖</h3>
+<pre><code class="language-bash">git clone https://github.com/shengjidaguai-china/BossHunter.git
+cd BossHunter
+npm --prefix src/bosshunter/web/frontend ci
+npm --prefix src/bosshunter/web/frontend run build
+pip install -e .</code></pre>
+<h3 id="2.-开启-Chrome-远程调试"><a href="#2.-开启-Chrome-远程调试" class="headerlink" title="2. 开启 Chrome 远程调试"></a>2. 开启 Chrome 远程调试</h3>
+<pre><code class="language-bash"># Linux（推荐使用独立用户目录）
+google-chrome --remote-debugging-port=9222 --user-data-dir="$HOME/.bosshunter-chrome"</code></pre>
+<p>使用独立用户目录时，需要在这个 Chrome 窗口中登录要使用的招聘平台，并保持窗口开启。</p>
+<h3 id="3.-完成本地配置"><a href="#3.-完成本地配置" class="headerlink" title="3. 完成本地配置"></a>3. 完成本地配置</h3>
+<pre><code class="language-bash">bosshunter web</code></pre>
+<p>浏览器打开 <code>http://127.0.0.1:8686</code>，完成：</p>
+<ol>
+<li>上传自己的简历（.md、.docx 或带文字层的 .pdf）</li>
+<li>设置搜索关键词、目标城市、评分阈值</li>
+<li>配置 AI 服务商和 API Key（在面板中输入，不要提交到代码仓库）</li>
+</ol>
+<h3 id="4.-检查连接"><a href="#4.-检查连接" class="headerlink" title="4. 检查连接"></a>4. 检查连接</h3>
+<pre><code class="language-bash">bosshunter ai-status
+bosshunter connect</code></pre>
+<h3 id="5.-运行"><a href="#5.-运行" class="headerlink" title="5. 运行"></a>5. 运行</h3>
+<pre><code class="language-bash">bosshunter run</code></pre>
+<p>完整流程：采集岗位 → AI 评分 → 人工确认投递清单 → 生成招呼语 → 低频发送 → 监听回复。</p>
+<h2 id="实测结果"><a href="#实测结果" class="headerlink" title="实测结果"></a>实测结果</h2>
+<table>
+<thead>
+<tr><th>项</th><th>值</th></tr>
+</thead>
+<tbody>
+<tr><td>采集岗位</td><td>92</td></tr>
+<tr><td>评分通过 / 过滤</td><td>76 / 16</td></tr>
+<tr><td>实测发送</td><td>5（人工确认）</td></tr>
+<tr><td>评分阈值</td><td>60（低匹配优先练手策略）</td></tr>
+</tbody>
+</table>
+<h2 id="简历管理"><a href="#简历管理" class="headerlink" title="简历管理"></a>简历管理</h2>
+<p>项目本身支持 JD→定制简历，但缺少多简历管理和历史记录。为此自研了 <code>tools/resume_manager.py</code>：</p>
+<pre><code class="language-bash">resume-mgr list                                   # 基础简历列表（* 当前使用）
+resume-mgr import 简历.docx --use                 # 导入并设为当前
+resume-mgr use 简历.md                            # 切换简历
+resume-mgr tailor --jd jd.txt --title 岗位 --company 公司  # 生成定制简历
+cat jd.txt | resume-mgr tailor --jd -              # 支持 stdin
+resume-mgr history                                # 定制简历历史</code></pre>
+<p>自研工具复用了项目的 <code>bosshunter.ai.resume</code>（AI + 校验 + 渲染）和 <code>bosshunter.browser</code>（CDP），不重造生成逻辑。产物保存在 <code>data/resumes/</code> 下，包括 .md + .pdf + .png。</p>
+<h2 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h2>
+<ol>
+<li>许可证为 PolyForm Noncommercial（<strong>非开源</strong>），仅限非商业用途</li>
+<li>仅 BOSS 直聘支持自动发送和监听；智联/51job/猎聘仅支持只读采集</li>
+<li>API Key 只在本地面板输入，不要发送到聊天、Issue 或提交文件中</li>
+<li>所有投递必须经过人工确认，不会在未经确认时发送</li>
+</ol>
+<p>详细部署步骤见 <a target="_blank" rel="noopener" href="https://github.com/atcXiGua/personal/tree/main/bosshunter/setup/SETUP.md">个人仓库 setup/SETUP.md</a>，踩坑记录见 <a target="_blank" rel="noopener" href="https://github.com/atcXiGua/personal/tree/main/bosshunter/LESSONS.md">LESSONS.md</a>。</p>
+    <div class="reprint" id="reprint-statement">
+        
+            <div class="reprint__author">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-user">
+                        文章作者:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="/about" rel="external nofollow noreferrer">atcXiGua</a>
+                </span>
+            </div>
+            <div class="reprint__type">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-link">
+                        文章链接:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://atcxigua.github.io/2024/03/05/hello-world/">https://atcxigua.github.io/2024/03/05/hello-world/</a>
+                </span>
+            </div>
+            <div class="reprint__notice">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-copyright">
+                        版权声明:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    本博客所有文章除特別声明外，均采用
+                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    许可协议。转载请注明来源
+                    <a href="/about" target="_blank">atcXiGua</a>
+                    !
+                </span>
+            </div>
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                                        <a href="/tags/BossHunter/"><span class="chip bg-color">BossHunter</span></a>
+                <a href="/tags/求职/"><span class="chip bg-color">求职</span></a>
+                <a href="/tags/AI Agent/"><span class="chip bg-color">AI Agent</span></a>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css">
+<div id="article-share">
+
+    
+    <div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+                <div id="reward">
+    <a href="#rewardModal" class="reward-link modal-trigger btn-floating btn-medium waves-effect waves-light red">赏</a>
+
+    <!-- Modal Structure -->
+    <div id="rewardModal" class="modal">
+        <div class="modal-content">
+            <a class="close modal-close"><i class="fas fa-times"></i></a>
+            <h4 class="reward-title">你的赏识是我前进的动力</h4>
+            <div class="reward-content">
+                <div class="reward-tabs">
+                    <ul class="tabs row">
+                        <li class="tab col s6 alipay-tab waves-effect waves-light"><a href="#alipay">支付宝</a></li>
+                        <li class="tab col s6 wechat-tab waves-effect waves-light"><a href="#wechat">微 信</a></li>
+                    </ul>
+                    <div id="alipay">
+                        <img src="/medias/reward/alipay.jpg" class="reward-img" alt="支付宝打赏二维码">
+                    </div>
+                    <div id="wechat">
+                        <img src="/medias/reward/wechat.png" class="reward-img" alt="微信打赏二维码">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
     $(function () {
-        let coverSlider = $('.carousel');
+        $('.tabs').tabs();
+    });
+</script>
 
-        //用户触摸轮播自动 restartPlay 是否生效
-        let initUserPressedOrDraggedActive = false
-
-        //用户触摸轮播自动 restartPlay
-        function initUserPressedOrDragged(instance) {
-            setInterval(() => {
-                if (instance.pressed || instance.dragged) {
-                    // console.log('initUserPressedOrDragged: ',instance.pressed,instance.dragged)
-                    restartPlay()
-                }
-            }, 1000)
-        }
-
-        coverSlider.carousel({
-            duration: Number('120'),
-            fullWidth: true,
-            indicators: 'true' === 'true',
-            onCycleTo() {
-                if (!initUserPressedOrDraggedActive) {
-                    // console.log('initUserPressedOrDraggedActive')
-                    initUserPressedOrDragged(this)
-                    initUserPressedOrDraggedActive = true
-                }
-            },
-        })
-
-        let carouselIntervalId;
-        
-        // Loop to call the next cover article picture.
-        let autoCarousel = function () {
-            carouselIntervalId = setInterval(function () {
-                coverSlider.carousel('next');
-            }, 5000);
-        };
-        autoCarousel();
-        
-
-        function restartPlay() {
             
-            clearInterval(carouselIntervalId);
-            autoCarousel();
-            
-        };
+        </div>
+    </div>
 
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
         
-        // prev and next cover post.
-        $('#prev-cover').click(function () {
-            coverSlider.carousel('prev');
-            restartPlay();
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="far fa-dot-circle"></i>&nbsp;上一篇
+            </div>
+            <div class="card">
+                <a href="/2026/09/18/manufacturing-dw-datahub/">
+                    <div class="card-image">
+                        <img src="/medias/featureimages/8.jpg" class="responsive-img" alt="用 DataHub 管理制造业数据资产：元数据、血缘与治理">
+                        <span class="card-title">用 DataHub 管理制造业数据资产：元数据、血缘与治理</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        用 DataHub 管理制造业数仓数据资产：Ingestion Recipe 元数据采集、全链路血缘、术语表与数据分级治理落地。
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2026-09-18
+                            </span>
+                        <span class="publish-author">
+                            <i class="fas fa-user fa-fw"></i>
+                            atcXiGua
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+                <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="far fa-dot-circle"></i>
+            </div>
+            <div class="card">
+                <a href="/2026/09/17/hello-world/">
+                    <div class="card-image">
+                        <img src="/medias/featureimages/1.jpg" class="responsive-img" alt="BossHunter 部署实践">
+                        <span class="card-title">BossHunter 部署实践</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        BossHunter 部署实践：从环境搭建到完整链路打通，包括简历管理和定制简历生成。
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2026-09-17
+                            </span>
+                        <span class="publish-author">
+                            <i class="fas fa-user fa-fw"></i>
+                            atcXiGua
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script>
+
+
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeShrink.js"></script>
+
+
+
+    </div>
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget card" style="background-color: white;">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('0'),
+            headingSelector: 'h2, h3, h4'
         });
-        $('#next-cover').click(function () {
-            coverSlider.carousel('next');
-            restartPlay();
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
         });
         
     });
 </script>
 
-
-
-<main class="content">
-
     
-    <div id="indexCard" class="index-card">
-        <div class="container ">
-            <div class="card">
-                <div class="card-content">
-                    
-                        <div class="dream">
-    
-    <div class="title center-align">
-        <i class="far fa-lightbulb"></i>&nbsp;&nbsp;我的梦想
-    </div>
-    
-    <div class="row">
-        <div class="col l8 offset-l2 m10 offset-m1 s10 offset-s1 center-align text">
-            不是每个人都应该像我这样去建造一座水晶大教堂，但是每个人都应该拥有自己的梦想，设计自己的梦想，追求自己的梦想，实现自己的梦想。梦想是生命的灵魂，是心灵的灯塔，是引导人走向成功的信仰。有了崇高的梦想，只要矢志不渝地追求，梦想就会成为现实，奋斗就会变成壮举，生命就会创造奇迹。——罗伯·舒乐
-        </div>
-    </div>
-</div>
-
-                    
-
-                    
-
-                    
-
-                    
-                    <div id="recommend-sections" class="recommend">
-                        
-
-
-
-                    </div>
-                    
-                </div>
-            </div>
-        </div>
-    </div>
-    
-
-    
-
-    <!-- 所有文章卡片 -->
-    <article id="articles" class="container articles">
-        <div class="row article-row">
-             <!-- 隐藏某个文章 -->
-            <div class="article col s12 m6 l4" data-aos="zoom-in">
-                <div class="card">
-                    <a href="/2026/09/18/manufacturing-dw-architecture/">
-                        <div class="card-image">
-                            <img src="/medias/featureimages/2.jpg" class="responsive-img" alt="制造业数据仓库 POC：架构设计与落地实践">
-                            <span class="card-title">制造业数据仓库 POC：架构设计与落地实践</span>
-                        </div>
-                    </a>
-                    <div class="card-content article-content">
-                        <div class="summary block-with-text">
-                            基于湖仓一体架构的制造业数据仓库 POC：五层分层设计、离线 + 实时双链路、Iceberg/Doris/SeaTunnel 技术选型与一键部署方案。
-                        </div>
-                        <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2026-09-18
-                            </span>
-                            <span class="publish-author">
-                                <i class="fas fa-user fa-fw"></i>
-                                atcXiGua
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-             <!-- 隐藏某个文章 -->
-            <div class="article col s12 m6 l4" data-aos="zoom-in">
-                <div class="card">
-                    <a href="/2026/09/18/manufacturing-dw-data-model/">
-                        <div class="card-image">
-                            <img src="/medias/featureimages/5.jpg" class="responsive-img" alt="制造业数据仓库的维度建模与指标体系">
-                            <span class="card-title">制造业数据仓库的维度建模与指标体系</span>
-                        </div>
-                    </a>
-                    <div class="card-content article-content">
-                        <div class="summary block-with-text">
-                            制造业数仓的维度建模实践：事实表与维度表设计、六大主题域指标体系、OEE 三要素与黄红双阈值预警。
-                        </div>
-                        <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2026-09-18
-                            </span>
-                            <span class="publish-author">
-                                <i class="fas fa-user fa-fw"></i>
-                                atcXiGua
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-             <!-- 隐藏某个文章 -->
-            <div class="article col s12 m6 l4" data-aos="zoom-in">
-                <div class="card">
-                    <a href="/2026/09/18/manufacturing-dw-datahub/">
-                        <div class="card-image">
-                            <img src="/medias/featureimages/8.jpg" class="responsive-img" alt="用 DataHub 管理制造业数据资产：元数据、血缘与治理">
-                            <span class="card-title">用 DataHub 管理制造业数据资产：元数据、血缘与治理</span>
-                        </div>
-                    </a>
-                    <div class="card-content article-content">
-                        <div class="summary block-with-text">
-                            用 DataHub 管理制造业数仓数据资产：Ingestion Recipe 元数据采集、全链路血缘、术语表与数据分级治理落地。
-                        </div>
-                        <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2026-09-18
-                            </span>
-                            <span class="publish-author">
-                                <i class="fas fa-user fa-fw"></i>
-                                atcXiGua
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-             <!-- 隐藏某个文章 -->
-            <div class="article col s12 m6 l4" data-aos="zoom-in">
-                <div class="card">
-                    <a href="/2026/09/17/hello-world/">
-                        <div class="card-image">
-                            <img src="/medias/featureimages/1.jpg" class="responsive-img" alt="BossHunter 部署实践">
-                            <span class="card-title">BossHunter 部署实践</span>
-                        </div>
-                    </a>
-                    <div class="card-content article-content">
-                        <div class="summary block-with-text">
-                            BossHunter 部署实践：从环境搭建到完整链路打通，包括简历管理和定制简历生成。
-                        </div>
-                        <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2026-09-17
-                            </span>
-                            <span class="publish-author">
-                                <i class="fas fa-user fa-fw"></i>
-                                atcXiGua
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-              <!-- 隐藏某个文章 -->
-        
-        
-        
-        
-        
-        
-        
-            
-        </div>
-    </article>
 
 </main>
 
@@ -669,7 +773,7 @@
         <div class="col s12 m8 l8 copy-right">
             Copyright&nbsp;&copy;
             
-                <span id="year">2019-2026</span>
+                <span id="year">2019-2024</span>
             
             <a href="/about" target="_blank">atcXiGua</a>
             |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
