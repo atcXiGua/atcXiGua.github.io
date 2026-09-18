@@ -78,6 +78,27 @@ def load_posts(blog):
     return posts
 
 # ---------------------------------------------------------------- helpers
+CHIP_GRADIENTS = [
+    'linear-gradient(to right, #4cbf30 0%, #0f9d58 100%)',
+    'linear-gradient(to right, #6772e5 0%, #4a64ee 100%)',
+    'linear-gradient(to right, #ff9e0f 0%, #ff7a00 100%)',
+    'linear-gradient(to right, #fa755a 0%, #f4511e 100%)',
+    'linear-gradient(to right, #3ecf8e 0%, #00bfa5 100%)',
+    'linear-gradient(to right, #82d3f4 0%, #29b6f6 100%)',
+    'linear-gradient(to right, #ab47bc 0%, #8e24aa 100%)',
+    'linear-gradient(to right, #525f7f 0%, #3e4c59 100%)',
+    'linear-gradient(to right, #f51c47 0%, #d81b60 100%)',
+    'linear-gradient(to right, #26a69a 0%, #00897b 100%)',
+]
+
+
+def chip(href, name, i):
+    """colored tag/category chip; color cycles through CHIP_GRADIENTS"""
+    grad = CHIP_GRADIENTS[i % len(CHIP_GRADIENTS)]
+    return (f'<a href="{href}"><span class="chip" '
+            f'style="background-image: {grad}">{name}</span></a>')
+
+
 def url_for(p):
     d = datetime.date.fromisoformat(p['date'])
     return f"/{d.year}/{d.month:02d}/{d.day:02d}/{p['slug']}/"
@@ -100,8 +121,7 @@ POST_TPL = os.path.join(HERE, 'tpl_post.html')
 def render_post(p, prev, nxt, blog):
     tpl = open(POST_TPL, encoding='utf-8').read()
     chips = '\n'.join(
-        f'                <a href="/tags/{t}/"><span class="chip bg-color">{esc(t)}</span></a>'
-        for t in p['tags']) or '                <span class="chip bg-color">无标签</span>'
+        chip(f'/tags/{t}/', esc(t), i) for i, t in enumerate(p['tags'])) or '                <span class="chip bg-color">无标签</span>'
     kw = p['keywords'] or (', '.join(p['tags'] + [p['title'], 'simple life']))
     out = (tpl
            .replace('{{TITLE}}', esc(p['title']))
@@ -371,8 +391,7 @@ def regen(blog):
             by_tag.setdefault(t, []).append(p)
     tag_idx = open(os.path.join(blog, 'tags', 'index.html'), encoding='utf-8').read()
     chips = '\n'.join(
-        f'                <a href="/tags/{esc(t)}/"><span class="chip bg-color">{esc(t)}</span></a>'
-        for t in sorted(by_tag)) or '                暂无标签'
+        chip(f'/tags/{t}/', esc(t), i) for i, t in enumerate(sorted(by_tag))) or '                暂无标签'
     tag_idx = re.sub(r'(<div class="tag-chips">)(.*?)(</div>)',
                      lambda m: m.group(1) + '\n' + chips + '\n            ' + m.group(3),
                      tag_idx, count=1, flags=re.S)
@@ -389,8 +408,7 @@ def regen(blog):
             by_cat.setdefault(c, []).append(p)
     cat_idx = open(os.path.join(blog, 'categories', 'index.html'), encoding='utf-8').read()
     chips = '\n'.join(
-        f'                <a href="/categories/{esc(c)}/"><span class="chip bg-color">{esc(c)}</span></a>'
-        for c in sorted(by_cat)) or '                你目前还没有对文章进行分类.'
+        chip(f'/categories/{c}/', esc(c), i) for i, c in enumerate(sorted(by_cat))) or '                你目前还没有对文章进行分类.'
     cat_idx = re.sub(r'(<div class="tag-chips">)(.*?)(</div>)',
                      lambda m: m.group(1) + '\n' + chips + '\n            ' + m.group(3),
                      cat_idx, count=1, flags=re.S)
@@ -400,7 +418,111 @@ def regen(blog):
                   os.path.join(blog, 'categories', c, 'index.html'))
     print(f'regenerated categories ({len(by_cat)} categories)')
 
+    # ---- about page charts (posts per month / categories / top tags)
+    patch_about(blog, posts)
+    print('regenerated about/index.html charts')
+
     return posts
+
+def about_charts_script(posts):
+    """ECharts script for the about page: posts/month line, categories pie, top-10 tags bar."""
+    # posts per month over the last 12 months (ending at the newest post)
+    by_month = {}
+    for p in posts:
+        d = datetime.date.fromisoformat(p['date'])
+        by_month[f'{d.year}-{d.month:02d}'] = by_month.get(f'{d.year}-{d.month:02d}', 0) + 1
+    months = sorted(by_month)
+    if months:
+        end = datetime.date.fromisoformat(months[-1] + '-01')
+    else:
+        end = datetime.date.today()
+    axis, vals = [], []
+    cur = (end.replace(day=1) - datetime.timedelta(days=365))
+    while cur <= end:
+        key = f'{cur.year}-{cur.month:02d}'
+        axis.append(key)
+        vals.append(by_month.get(key, 0))
+        # advance one month
+        cur = (cur.replace(day=28) + datetime.timedelta(days=6)).replace(day=1)
+
+    by_cat = {}
+    for p in posts:
+        for c in p['cats']:
+            by_cat[c] = by_cat.get(c, 0) + 1
+    cat_pie = ', '.join(f'{{value: {n}, name: "{esc(c)}"}}'
+                        for c, n in sorted(by_cat.items(), key=lambda kv: -kv[1]))
+
+    by_tag = {}
+    for p in posts:
+        for t in p['tags']:
+            by_tag[t] = by_tag.get(t, 0) + 1
+    top_tags = sorted(by_tag.items(), key=lambda kv: -kv[1])[:10]
+    tag_names = ', '.join(f'"{esc(t)}"' for t, _ in top_tags)
+    tag_vals = ', '.join(str(n) for _, n in top_tags)
+
+    return f'''    let postsChart = echarts.init(document.getElementById('posts-chart'));
+    let categoriesChart = echarts.init(document.getElementById('categories-chart'));
+    let tagsChart = echarts.init(document.getElementById('tags-chart'));
+
+    let postsOption = {{
+        title: {{ text: '文章发布统计图', top: -5, x: 'center' }},
+        tooltip: {{ trigger: 'axis' }},
+        xAxis: {{ type: 'category', data: [{', '.join(f'"{m}"' for m in axis)}] }},
+        yAxis: {{ type: 'value' }},
+        series: [{{
+            name: '文章篇数', type: 'line', color: ['#6772e5'], data: [{', '.join(str(v) for v in vals)}],
+            markPoint: {{
+                symbolSize: 45,
+                color: ['#fa755a','#3ecf8e','#82d3f4'],
+                data: [{{ type: 'max', itemStyle: {{color: ['#3ecf8e']}}, name: '最大值' }},
+                       {{ type: 'min', itemStyle: {{color: ['#fa755a']}}, name: '最小值' }}]
+            }},
+            markLine: {{ itemStyle: {{color: ['#ab47bc']}}, data: [{{ type: 'average', name: '平均值' }}] }}
+        }}]
+    }};
+
+    let categoriesOption = {{
+        title: {{ text: '文章分类统计图', top: -4, x: 'center' }},
+        tooltip: {{ trigger: 'item', formatter: "{{a}} <br/>{{b}} : {{c}} ({{d}}%)" }},
+        series: [{{
+            name: '分类', type: 'pie', radius: '50%',
+            color: ['#6772e5', '#ff9e0f', '#fa755a', '#3ecf8e', '#82d3f4', '#ab47bc', '#525f7f', '#f51c47', '#26A69A'],
+            data: [{cat_pie}],
+            itemStyle: {{ emphasis: {{ shadowBlur: 10, shadowOffsetX: 0, shadowColor: 'rgba(0, 0, 0, 0.5)' }} }}
+        }}]
+    }};
+
+    let tagsOption = {{
+        title: {{ text: 'TOP10 标签统计图', top: -5, x: 'center' }},
+        tooltip: {{}},
+        xAxis: [{{ type: 'category', data: [{tag_names}] }}],
+        yAxis: [{{ type: 'value' }}],
+        series: [{{
+            type: 'bar', color: ['#82d3f4'], barWidth: 18, data: [{tag_vals}],
+            markPoint: {{
+                symbolSize: 45,
+                data: [{{ type: 'max', itemStyle: {{color: ['#3ecf8e']}}, name: '最大值' }},
+                       {{ type: 'min', itemStyle: {{color: ['#fa755a']}}, name: '最小值' }}]
+            }},
+            markLine: {{ itemStyle: {{color: ['#ab47bc']}}, data: [{{ type: 'average', name: '平均值' }}] }}
+        }}]
+    }};
+
+    postsChart.setOption(postsOption);
+    categoriesChart.setOption(categoriesOption);
+    tagsChart.setOption(tagsOption);'''
+
+
+def patch_about(blog, posts):
+    """Replace the about-page charts script with data generated from .posts."""
+    path = os.path.join(blog, 'about', 'index.html')
+    s = open(path, encoding='utf-8').read()
+    m = re.search(r'<script>\n    let postsChart.*?</script>', s, re.S)
+    if not m:
+        raise SystemExit('about/index.html: charts script not found')
+    s = s[:m.start()] + '<script>\n' + about_charts_script(posts) + '\n</script>' + s[m.end():]
+    open(path, 'w', encoding='utf-8').write(s)
+
 
 def main():
     cmd = sys.argv[1] if len(sys.argv) > 1 else 'regen'

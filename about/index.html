@@ -486,132 +486,50 @@
     let categoriesChart = echarts.init(document.getElementById('categories-chart'));
     let tagsChart = echarts.init(document.getElementById('tags-chart'));
 
-    
-
     let postsOption = {
-        title: {
-            text: '文章发布统计图',
-            top: -5,
-            x: 'center'
-        },
-        tooltip: {
-            trigger: 'axis'
-        },
-        xAxis: {
-            type: 'category',
-            data: ["2025-10","2025-11","2025-12","2026-01","2026-02","2026-03","2026-04","2026-05","2026-06","2026-07","2026-08","2026-09"]
-        },
-        yAxis: {
-            type: 'value',
-        },
-        series: [
-            {
-                name: '文章篇数',
-                type: 'line',
-                color: ['#6772e5'],
-                data: [0,0,0,0,0,0,0,0,0,0,0,0,1],
-                markPoint: {
-                    symbolSize: 45,
-                    color: ['#fa755a','#3ecf8e','#82d3f4'],
-                    data: [{
-                        type: 'max',
-                        itemStyle: {color: ['#3ecf8e']},
-                        name: '最大值'
-                    }, {
-                        type: 'min',
-                        itemStyle: {color: ['#fa755a']},
-                        name: '最小值'
-                    }]
-                },
-                markLine: {
-                    itemStyle: {color: ['#ab47bc']},
-                    data: [
-                        {type: 'average', name: '平均值'}
-                    ]
-                }
-            }
-        ]
+        title: { text: '文章发布统计图', top: -5, x: 'center' },
+        tooltip: { trigger: 'axis' },
+        xAxis: { type: 'category', data: ["2025-09", "2025-10", "2025-11", "2025-12", "2026-01", "2026-02", "2026-03", "2026-04", "2026-05", "2026-06", "2026-07", "2026-08", "2026-09"] },
+        yAxis: { type: 'value' },
+        series: [{
+            name: '文章篇数', type: 'line', color: ['#6772e5'], data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6],
+            markPoint: {
+                symbolSize: 45,
+                color: ['#fa755a','#3ecf8e','#82d3f4'],
+                data: [{ type: 'max', itemStyle: {color: ['#3ecf8e']}, name: '最大值' },
+                       { type: 'min', itemStyle: {color: ['#fa755a']}, name: '最小值' }]
+            },
+            markLine: { itemStyle: {color: ['#ab47bc']}, data: [{ type: 'average', name: '平均值' }] }
+        }]
     };
-
-    
 
     let categoriesOption = {
-        title: {
-            text: '文章分类统计图',
-            top: -4,
-            x: 'center'
-        },
-        tooltip: {
-            trigger: 'item',
-            formatter: "{a} <br/>{b} : {c} ({d}%)"
-        },
-        series: [
-            {
-                name: '分类',
-                type: 'pie',
-                radius: '50%',
-                color: ['#6772e5', '#ff9e0f', '#fa755a', '#3ecf8e', '#82d3f4', '#ab47bc', '#525f7f', '#f51c47', '#26A69A'],
-                data: [],
-                itemStyle: {
-                    emphasis: {
-                        shadowBlur: 10,
-                        shadowOffsetX: 0,
-                        shadowColor: 'rgba(0, 0, 0, 0.5)'
-                    }
-                }
-            }
-        ]
+        title: { text: '文章分类统计图', top: -4, x: 'center' },
+        tooltip: { trigger: 'item', formatter: "{a} <br/>{b} : {c} ({d}%)" },
+        series: [{
+            name: '分类', type: 'pie', radius: '50%',
+            color: ['#6772e5', '#ff9e0f', '#fa755a', '#3ecf8e', '#82d3f4', '#ab47bc', '#525f7f', '#f51c47', '#26A69A'],
+            data: [{value: 3, name: "大数据"}, {value: 2, name: "工具"}, {value: 1, name: "思考"}],
+            itemStyle: { emphasis: { shadowBlur: 10, shadowOffsetX: 0, shadowColor: 'rgba(0, 0, 0, 0.5)' } }
+        }]
     };
-
-    
 
     let tagsOption = {
-        title: {
-            text: 'TOP10 标签统计图',
-            top: -5,
-            x: 'center'
-        },
+        title: { text: 'TOP10 标签统计图', top: -5, x: 'center' },
         tooltip: {},
-        xAxis: [
-            {
-                type: 'category',
-                data: []
-            }
-        ],
-        yAxis: [
-            {
-                type: 'value'
-            }
-        ],
-        series: [
-            {
-                type: 'bar',
-                color: ['#82d3f4'],
-                barWidth : 18,
-                data: [],
-                markPoint: {
-                    symbolSize: 45,
-                    data: [{
-                        type: 'max',
-                        itemStyle: {color: ['#3ecf8e']},
-                        name: '最大值'
-                    }, {
-                        type: 'min',
-                        itemStyle: {color: ['#fa755a']},
-                        name: '最小值'
-                    }],
-                },
-                markLine: {
-                    itemStyle: {color: ['#ab47bc']},
-                    data: [
-                        {type: 'average', name: '平均值'}
-                    ]
-                }
-            }
-        ]
+        xAxis: [{ type: 'category', data: ["AI", "思考", "稀缺性", "数据仓库", "湖仓一体", "Doris", "维度建模", "指标体系", "OEE", "DataHub"] }],
+        yAxis: [{ type: 'value' }],
+        series: [{
+            type: 'bar', color: ['#82d3f4'], barWidth: 18, data: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            markPoint: {
+                symbolSize: 45,
+                data: [{ type: 'max', itemStyle: {color: ['#3ecf8e']}, name: '最大值' },
+                       { type: 'min', itemStyle: {color: ['#fa755a']}, name: '最小值' }]
+            },
+            markLine: { itemStyle: {color: ['#ab47bc']}, data: [{ type: 'average', name: '平均值' }] }
+        }]
     };
 
-    // render the charts
     postsChart.setOption(postsOption);
     categoriesChart.setOption(categoriesOption);
     tagsChart.setOption(tagsOption);
@@ -625,6 +543,28 @@
         <i class="fas fa-gift"></i>&nbsp;&nbsp;我的项目
     </div>
     <div class="row">
+        <div class="col s12 m6" data-aos="fade-up">
+            <div class="info">
+                <div class="icon" style="background: linear-gradient(to right, #2196F3 0%, #42A5F5 100%)">
+                    <i class="fas fa-database"></i>
+                </div>
+                <div class="info-title">
+                    <a href="https://github.com/atcXiGua/personal" target="_blank" rel="noopener">manufacturing-dw-poc</a>
+                </div>
+                <div class="info-desc">制造业数据仓库 POC：湖仓一体五层架构、离线 + 实时双链路、维度建模与指标体系、DataHub 元数据治理</div>
+            </div>
+        </div>
+        <div class="col s12 m6" data-aos="fade-up">
+            <div class="info">
+                <div class="icon" style="background: linear-gradient(to right, #4cbf30 0%, #0f9d58 100%)">
+                    <i class="fas fa-blog"></i>
+                </div>
+                <div class="info-title">
+                    <a href="https://github.com/atcXiGua/atcXiGua.github.io" target="_blank" rel="noopener">atcXiGua.github.io</a>
+                </div>
+                <div class="info-desc">个人博客：Hexo + Matery 纯静态站点，opencode skill 驱动的 Markdown 一键发布流水线</div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -633,75 +573,67 @@
         <i class="fas fa-wrench"></i>&nbsp;&nbsp;我的技能
     </div>
     <div class="row">
-        
-        
-        
+
         <div class="col s12 m6 l6" data-aos="fade-up">
             <div class="skillbar">
                 <div class="skillbar-title"
-                     style="background: linear-gradient(to right, #FF0066 0%, #FF00CC 100%); width: 85%">
-                    <span>Java</span>
-                </div>
-                <div class="skill-bar-percent">85%</div>
-            </div>
-        </div>
-        
-        
-        <div class="col s12 m6 l6" data-aos="fade-up">
-            <div class="skillbar">
-                <div class="skillbar-title"
-                     style="background: linear-gradient(to right, #9900FF 0%, #CC66FF 100%); width: 80%">
-                    <span>JavaScript</span>
-                </div>
-                <div class="skill-bar-percent">80%</div>
-            </div>
-        </div>
-        
-        
-        <div class="col s12 m6 l6" data-aos="fade-up">
-            <div class="skillbar">
-                <div class="skillbar-title"
-                     style="background: linear-gradient(to right, #2196F3 0%, #42A5F5 100%); width: 80%">
-                    <span>HTML5</span>
-                </div>
-                <div class="skill-bar-percent">80%</div>
-            </div>
-        </div>
-        
-        
-        <div class="col s12 m6 l6" data-aos="fade-up">
-            <div class="skillbar">
-                <div class="skillbar-title"
-                     style="background: linear-gradient(to right, #00BCD4 0%, #80DEEA 100%); width: 70%">
-                    <span>CSS</span>
-                </div>
-                <div class="skill-bar-percent">70%</div>
-            </div>
-        </div>
-        
-        
-        <div class="col s12 m6 l6" data-aos="fade-up">
-            <div class="skillbar">
-                <div class="skillbar-title"
-                     style="background: linear-gradient(to right, #4CAF50 0%, #81C784 100%); width: 90%">
-                    <span>SQL</span>
+                     style="background: linear-gradient(to right, #4cbf30 0%, #0f9d58 100%); width: 90%">
+                    <span>Python</span>
                 </div>
                 <div class="skill-bar-percent">90%</div>
             </div>
         </div>
-        
-        
+
         <div class="col s12 m6 l6" data-aos="fade-up">
             <div class="skillbar">
                 <div class="skillbar-title"
-                     style="background: linear-gradient(to right, #FFEB3B 0%, #FFF176 100%); width: 75%">
-                    <span>程序设计</span>
+                     style="background: linear-gradient(to right, #2196F3 0%, #42A5F5 100%); width: 85%">
+                    <span>SQL</span>
+                </div>
+                <div class="skill-bar-percent">85%</div>
+            </div>
+        </div>
+
+        <div class="col s12 m6 l6" data-aos="fade-up">
+            <div class="skillbar">
+                <div class="skillbar-title"
+                     style="background: linear-gradient(to right, #6772e5 0%, #4a64ee 100%); width: 85%">
+                    <span>数据仓库 / 维度建模</span>
+                </div>
+                <div class="skill-bar-percent">85%</div>
+            </div>
+        </div>
+
+        <div class="col s12 m6 l6" data-aos="fade-up">
+            <div class="skillbar">
+                <div class="skillbar-title"
+                     style="background: linear-gradient(to right, #ff9e0f 0%, #ff7a00 100%); width: 75%">
+                    <span>Doris</span>
                 </div>
                 <div class="skill-bar-percent">75%</div>
             </div>
         </div>
-        
-        
+
+        <div class="col s12 m6 l6" data-aos="fade-up">
+            <div class="skillbar">
+                <div class="skillbar-title"
+                     style="background: linear-gradient(to right, #ab47bc 0%, #8e24aa 100%); width: 75%">
+                    <span>DataHub 元数据治理</span>
+                </div>
+                <div class="skill-bar-percent">75%</div>
+            </div>
+        </div>
+
+        <div class="col s12 m6 l6" data-aos="fade-up">
+            <div class="skillbar">
+                <div class="skillbar-title"
+                     style="background: linear-gradient(to right, #26a69a 0%, #00897b 100%); width: 70%">
+                    <span>湖仓一体 / Iceberg</span>
+                </div>
+                <div class="skill-bar-percent">70%</div>
+            </div>
+        </div>
+
     </div>
 
     
