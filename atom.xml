@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>BossHunter 部署实践</title>
+  <link rel="alternate" href="https://atcxigua.github.io/"/>
+  <link rel="self" href="https://atcxigua.github.io/atom.xml"/>
+  <id>https://atcxigua.github.io/</id>
+  <updated>2026-09-17T00:00:00+08:00</updated>
+  <author>
+    <name>atcXiGua</name>
+  </author>
+  <subtitle>simple life</subtitle>
+  <entry>
+    <title>BossHunter 部署实践</title>
+    <link rel="alternate" href="https://atcxigua.github.io/2024/03/05/hello-world/"/>
+    <id>https://atcxigua.github.io/2024/03/05/hello-world/</id>
+    <published>2026-09-17T00:00:00+08:00</published>
+    <updated>2026-09-17T00:00:00+08:00</updated>
+    <summary type="html"><![CDATA[BossHunter 是由 shengjidaguai-china/BossHunter 维护的本地智能求职 Agent 项目，版本 v2.4.0。本文记录了在 Windows + WSL2 环境下从零部署到跑通完整链路的实践过程。]]></summary>
+    <content type="html"><![CDATA[
+                <p>BossHunter 是由 <a target="_blank" rel="noopener" href="https://github.com/shengjidaguai-china/BossHunter">shengjidaguai-china/BossHunter</a> 维护的本地智能求职 Agent 项目，版本 v2.4.0。本文记录了在 Windows + WSL2 环境下从零部署到跑通完整链路的实践过程。</p>
+
+<h2 id="项目简介">项目简介</h2>
+<p>BossHunter 实现了一套完整的求职自动化流程：</p>
+<ol>
+<li><strong>多平台岗位采集</strong> — 串行采集 BOSS 直聘、智联招聘、前程无忧 51job 和猎聘</li>
+<li><strong>AI 评分与筛选</strong> — 关键词预筛 + JD 深度评分</li>
+<li><strong>人工确认</strong> — 投递前必须审核确认</li>
+<li><strong>个性化招呼语</strong> — 根据 JD 和简历自动生成</li>
+<li><strong>低频安全发送</strong> — 随机间隔 + 时间窗口 + 每日上限</li>
+<li><strong>HR 回复监听</strong> — 实时监测投递后的回复</li>
+<li><strong>定制简历</strong> — 根据岗位 JD 辅助生成针对性简历</li>
+</ol>
+
+<blockquote>
+<p>⚠️ 自动化操作招聘平台存在账号限制或封禁风险。本项目仅供学习、研究和个人求职效率提升；请遵守平台规则，保持低频，并自行承担使用风险。</p>
+</blockquote>
+
+<h2 id="环境准备">环境准备</h2>
+<p>部署前需要准备以下环境：</p>
+<table>
+<thead>
+<tr><th>依赖</th><th>版本</th><th>用途</th></tr>
+</thead>
+<tbody>
+<tr><td>Python</td><td>3.10+</td><td>核心运行时</td></tr>
+<tr><td>Node.js</td><td>22+</td><td>Browser Runtime / CDP 代理</td></tr>
+<tr><td>Google Chrome</td><td>最新稳定版</td><td>连接已登录的招聘平台</td></tr>
+<tr><td>AI API Key</td><td>—</td><td>Anthropic 或 OpenAI 兼容接口</td></tr>
+</tbody>
+</table>
+
+<h2 id="部署步骤">部署步骤</h2>
+<h3 id="1-安装依赖">1. 安装依赖</h3>
+<pre><code class="language-bash">git clone https://github.com/shengjidaguai-china/BossHunter.git
+cd BossHunter
+npm --prefix src/bosshunter/web/frontend ci
+npm --prefix src/bosshunter/web/frontend run build
+pip install -e .
+</code></pre>
+
+<h3 id="2-开启-chrome-远程调试">2. 开启 Chrome 远程调试</h3>
+<pre><code class="language-bash"># Linux（推荐使用独立用户目录）
+google-chrome --remote-debugging-port=9222 --user-data-dir="$HOME/.bosshunter-chrome"
+</code></pre>
+<p>使用独立用户目录时，需要在这个 Chrome 窗口中登录要使用的招聘平台，并保持窗口开启。</p>
+
+<h3 id="3-完成本地配置">3. 完成本地配置</h3>
+<pre><code class="language-bash">bosshunter web
+</code></pre>
+<p>浏览器打开 <code>http://127.0.0.1:8686</code>，完成：</p>
+<ol>
+<li>上传自己的简历（.md、.docx 或带文字层的 .pdf）</li>
+<li>设置搜索关键词、目标城市、评分阈值</li>
+<li>配置 AI 服务商和 API Key（在面板中输入，不要提交到代码仓库）</li>
+</ol>
+
+<h3 id="4-检查连接">4. 检查连接</h3>
+<pre><code class="language-bash">bosshunter ai-status
+bosshunter connect
+</code></pre>
+
+<h3 id="5-运行">5. 运行</h3>
+<pre><code class="language-bash">bosshunter run
+</code></pre>
+<p>完整流程：采集岗位 → AI 评分 → 人工确认投递清单 → 生成招呼语 → 低频发送 → 监听回复。</p>
+
+<h2 id="实测结果">实测结果</h2>
+<table>
+<thead>
+<tr><th>项</th><th>值</th></tr>
+</thead>
+<tbody>
+<tr><td>采集岗位</td><td>92</td></tr>
+<tr><td>评分通过 / 过滤</td><td>76 / 16</td></tr>
+<tr><td>实测发送</td><td>5（人工确认）</td></tr>
+<tr><td>评分阈值</td><td>60（低匹配优先练手策略）</td></tr>
+</tbody>
+</table>
+
+<h2 id="简历管理">简历管理</h2>
+<p>项目本身支持 JD→定制简历，但缺少多简历管理和历史记录。为此自研了 <code>tools/resume_manager.py</code>：</p>
+<pre><code class="language-bash">resume-mgr list                                   # 基础简历列表（* 当前使用）
+resume-mgr import 简历.docx --use                 # 导入并设为当前
+resume-mgr use 简历.md                            # 切换简历
+resume-mgr tailor --jd jd.txt --title 岗位 --company 公司  # 生成定制简历
+cat jd.txt | resume-mgr tailor --jd -              # 支持 stdin
+resume-mgr history                                # 定制简历历史
+</code></pre>
+<p>自研工具复用了项目的 <code>bosshunter.ai.resume</code>（AI + 校验 + 渲染）和 <code>bosshunter.browser</code>（CDP），不重造生成逻辑。产物保存在 <code>data/resumes/</code> 下，包括 .md + .pdf + .png。</p>
+
+<h2 id="注意事项">注意事项</h2>
+<ol>
+<li>许可证为 PolyForm Noncommercial（<strong>非开源</strong>），仅限非商业用途</li>
+<li>仅 BOSS 直聘支持自动发送和监听；智联/51job/猎聘仅支持只读采集</li>
+<li>API Key 只在本地面板输入，不要发送到聊天、Issue 或提交文件中</li>
+<li>所有投递必须经过人工确认，不会在未经确认时发送</li>
+</ol>
+
+<p>详细部署步骤见 <a target="_blank" rel="noopener" href="https://github.com/atcXiGua/personal/tree/main/bosshunter/setup/SETUP.md">个人仓库 setup/SETUP.md</a>，踩坑记录见 <a target="_blank" rel="noopener" href="https://github.com/atcXiGua/personal/tree/main/bosshunter/LESSONS.md">LESSONS.md</a>。</p>]]></content>
+  </entry>
+</feed>
