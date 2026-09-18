@@ -716,39 +716,90 @@ description: 把 Markdown 文章发布到 Hexo+Matery 静态博客站点（atcXi
 
 # 博客发布（Hexo + Matery 纯静态站点）
 
-站点 atcXiGua.github.io 是 Hexo + hexo-theme-matery 的纯静态生成站点（仓库里没有 Hexo 源码）。
-所有页面由 &lt;blog&gt;/.posts/publish.py 从 .posts/*.md 源文件重新生成。
+站点 atcXiGua.github.io 是 Hexo + hexo-theme-matery 的**纯静态生成站点**（仓库里没有 Hexo 源码）。
+所有页面由 `&lt;blog&gt;/.posts/publish.py` 从 `.posts/*.md` 源文件重新生成。
 
-- 博客仓库：默认克隆在 /mnt/d/tmp/blog（分支 master）
-- 源文章：&lt;blog&gt;/.posts/*.md（带 YAML frontmatter）
-- 发布器：&lt;blog&gt;/.posts/publish.py
-- Markdown 转换器：&lt;blog&gt;/.posts/md2html.py（自写，无第三方依赖）
+- 博客仓库：默认克隆在 `/mnt/d/tmp/blog`（分支 master）
+- 源文章：`&lt;blog&gt;/.posts/*.md`（带 YAML frontmatter）
+- 发布器：`&lt;blog&gt;/.posts/publish.py`
+- Markdown 转换器：`&lt;blog&gt;/.posts/md2html.py`（自写，无需第三方依赖）
+
+## 触发条件
+
+用户说类似这些话时用本 skill：
+- "把这篇文章发到博客上" / "发布文章" / "加一篇博客"
+- "更新某篇文章" / "改一下标签/分类"
+- "博客发布流程" / "publish.py"
 
 ## 发布流程
 
-1. 准备源文件：把 Markdown 放进 &lt;blog&gt;/.posts/&lt;slug&gt;.md，frontmatter 必填
-   title / slug / date / cover，可选 tags / categories / summary / description。
-   封面图在 &lt;blog&gt;/medias/featureimages/ 下选已有的。
-2. 重新生成所有派生页面：
-   python3 .posts/publish.py regen --blog /mnt/d/tmp/blog
-3. 本地验证：启动 python3 -m http.server 8765（workdir=博客根目录），用浏览器检查
-   #toc-aside 父元素是 .row、pre/code 标签平衡、#prenext-posts .article 数量为 2、
-   首页卡片数 == 文章数、控制台无报错。
-4. 提交并推送：
-   python3 .posts/publish.py git --blog /mnt/d/tmp/blog
+1. **准备源文件**：把 Markdown 放进 `&lt;blog&gt;/.posts/&lt;slug&gt;.md`，必须有 YAML frontmatter：
+
+      ---
+   title: 文章标题
+   slug: url-slug（英文/数字/连字符，用于永久链接）
+   date: 2026-09-18
+   cover: /medias/featureimages/12.jpg
+   tags:
+     - 标签1
+     - 标签2
+   categories:
+     - 分类名
+   summary: 首页卡片摘要（一句话）
+   description: SEO 描述
+   ---
+
+   正文（Markdown）……
+   
+   必填：title / slug / date / cover。封面图在 `&lt;blog&gt;/medias/featureimages/` 下选已有的，或先放新图进去。
+
+2. **重新生成所有派生页面**：
+
+      python3 .posts/publish.py regen --blog /mnt/d/tmp/blog
+   
+   会全量重生成：文章页（含上一篇/下一篇链）、首页卡片、search.xml、atom.xml、
+   归档页（含 ECharts 日历数据）、标签云 + 各标签页、分类页。已删除的文章会从所有页面移除。
+
+3. **本地验证**（重要，模板结构容易出问题）：
+
+      # 启动静态服务（每次 bash 调用 workdir 不持久，需指定 workdir）
+   python3 -m http.server 8765 --bind 127.0.0.1   # workdir=&lt;blog&gt;
+   
+   用 Playwright 打开 `http://127.0.0.1:8765/&lt;新文章路径&gt;/?v=N`，检查：
+   - `#toc-aside` 的父元素是 `.row`（不是 code/pre 容器），且与 `#main-content` 不重叠
+   - `#articleContent` 内 pre/code 标签数量一致（`document.querySelectorAll('pre').length` 等）
+   - 上一篇/下一篇卡片存在（`#prenext-posts .article` 数量为 2）
+   - 首页卡片数 == 文章数；归档页 timeline 块数 == 文章数
+   - 控制台无 JS 报错
+
+4. **提交并推送**：
+
+      python3 .posts/publish.py git --blog /mnt/d/tmp/blog
+   
+   自动 regen + commit + push 到 master。GitHub Pages 随后自动部署。
 
 ## Markdown 支持子集（md2html.py）
 
-ATX 标题（自动生成 hexo 风格锚点 headerlink）、围栏代码块、GFM 表格、引用、
-有序/无序列表、加粗、行内代码、链接、图片、分隔线、平衡的多行 raw HTML 块（整体透传）。
+ATX 标题（`##`/`###`/`####`，自动生成 hexo 风格锚点 headerlink）、围栏代码块（`  `，
+输出 `&lt;pre class="line-numbers language-lang"&gt;&lt;code class="language-lang"&gt;`，前端由 Prism.js
+语法高亮 + 行号 + 语言标签）、GFM 表格、引用、有序/无序列表、加粗、行内代码、
+链接、图片、分隔线、**平衡的多行 raw HTML 块**（整体透传）。
 
 ## 常见坑
 
-- raw HTML 必须标签平衡，否则转换器会把后续内容（含目录栏）吃进错误的容器
-- frontmatter 列表项不要留空值，否则空标签页路径退化为 tags/index.html 覆盖标签首页
-- #toc-aside 必须是 .row 的直接子元素，否则目录栏错位遮挡正文
-- 文章日期用 YYYY-MM-DD
-- 模板文件：.posts/tpl_post.html（文章页）、tpl_archive.html（归档）、tpl_list.html（标签/分类列表页）</code></pre>
+- **raw HTML 必须标签平衡**：源 MD 里直接写 `&lt;div&gt;/&lt;table&gt;/&lt;ul&gt;` 等 HTML 块时，开闭标签必须配平，
+  否则转换器的 raw-HTML 块吞咽会失衡，把后续内容（含目录栏）吃进错误的容器里，导致 TOC 遮挡正文。
+  代码示例一律用 `  ` 围栏写，不要用 raw `&lt;pre&gt;&lt;code&gt;`。
+- **frontmatter 的列表项不要留空行或空值**，否则会生成空标签，空标签页路径退化为 `tags/index.html` 覆盖标签首页。
+- **`#toc-aside` 必须是 `.row` 的直接子元素**，否则目录栏会错位遮挡正文（模板已修对，重新提取模板时注意）。
+- 文章日期用 `YYYY-MM-DD`；同一天的多篇文章按日期排序，prev/next 链由排序决定。
+- **代码块语言标签为空**：Matery 的 `codeLang.js` 从 `&lt;pre&gt;` 的 class 读语言，类名必须在
+  `&lt;pre&gt;` 上（不能只在 `&lt;code&gt;` 上），否则不显示语言名、Prism 也不高亮。
+- **文章页"文章链接"写死**：reprint 区的永久链接用 `{{PERMALINK}}` 占位符，不要写死某篇文章的 URL。
+- **代码块长行溢出**：`css/my.css` 里已加 `pre/pre code { white-space: pre-wrap; overflow-wrap: anywhere }`，
+  改主题 CSS 时不要覆盖。
+- 模板文件：`.posts/tpl_post.html`（文章页）、`tpl_archive.html`（归档）、`tpl_list.html`（标签/分类列表页）。
+  重新从站点现有页面提取模板时，用 HTML 解析器校验 `#toc-aside` 的祖先链是 `main.post-container &gt; .row`。</code></pre>
 <h2 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h2>
 <p>这两个 skill 的本质是把<strong>重复的机械流程固化成脚本 + 场景描述</strong>：agent 读到 description 知道"该用这个工具"，脚本保证"每一步可复现"。整套东西没有任何高深技术，难的是把每一步的坑都踩过一遍并写进文档——这也是这篇文章存在的意义。</p>
 <p>对话 → 文章 → 发布，一条命令的链条搭好之后，剩下的就是专注内容本身。</p>]]></content>
