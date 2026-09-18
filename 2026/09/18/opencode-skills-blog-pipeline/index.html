@@ -39,6 +39,7 @@
 
 
     <link rel="stylesheet" href="/libs/tocbot/tocbot.css">
+    <link rel="stylesheet" href="/libs/prism/prism.min.css">
     <link rel="stylesheet" href="/css/post.css">
 
 
@@ -387,7 +388,7 @@
 </ul>
 <p>写这篇文章的目的，是让我<strong>其他 PC 上的 agent 读完就能照着落地</strong>——两个 skill 的完整文件、依赖、每一步操作和所有踩过的坑都在下面。</p>
 <h2 id="环境准备（新-PC-上做一次）"><a href="#环境准备（新-PC-上做一次）" class="headerlink" title="环境准备（新 PC 上做一次）"></a>环境准备（新 PC 上做一次）</h2>
-<pre><code class="language-bash"># 1. 克隆博客仓库（脚本和模板都在仓库的 .posts/ 目录里，随仓库同步）
+<pre class="line-numbers language-bash"><code class="language-bash"># 1. 克隆博客仓库（脚本和模板都在仓库的 .posts/ 目录里，随仓库同步）
 git clone git@github.com:atcXiGua/atcXiGua.github.io.git /mnt/d/tmp/blog
 
 # 2. Python 3.10+，仅需标准库（urllib/re/json/html/yaml 都用标准库，无第三方依赖）
@@ -407,7 +408,7 @@ mkdir -p ~/.config/opencode/skills/chatgpt-conversation-extract</code></pre>
 <p>ChatGPT 分享页是 JS 渲染的，<code>webfetch</code> 直接抓只能拿到标题。但完整对话数据以 <strong>React Server Components（RSC）流</strong>的形式内嵌在 HTML 的 <code>&lt;script&gt;</code> 块里，调用形式是 <code>window.__reactRouterContext.streamController.enqueue("&lt;双重转义JSON&gt;")</code>。</p>
 <p>提取流程：抓 HTML → 找全部 <code>enqueue("...")</code> → <code>json.loads</code> 解一层转义得到 RSC payload → 递归收集全部字符串 → 过滤"长度 &gt;100 且密集含中文"的串 → 得到按顺序的消息。</p>
 <p>实测可用（提取了 4 条完整消息）：</p>
-<pre><code class="language-bash">python3 ~/.config/opencode/skills/chatgpt-conversation-extract/extract_chatgpt.py \
+<pre class="line-numbers language-bash"><code class="language-bash">python3 ~/.config/opencode/skills/chatgpt-conversation-extract/extract_chatgpt.py \
   "https://chatgpt.com/share/&lt;id&gt;" /mnt/d/tmp/chatgpt_conv.txt</code></pre>
 <p>输出是 <code>==== MESSAGE 0 ====</code> 分隔的文本文件，<code>read</code> 它即可进入后续加工。</p>
 <p><strong>已知局限</strong>（提取时心里有数）：</p>
@@ -424,11 +425,11 @@ mkdir -p ~/.config/opencode/skills/chatgpt-conversation-extract</code></pre>
 </table>
 <h2 id="Skill-2：博客自动发布"><a href="#Skill-2：博客自动发布" class="headerlink" title="Skill 2：博客自动发布"></a>Skill 2：博客自动发布</h2>
 <p>站点是 <strong>Hexo + hexo-theme-matery 的纯静态生成站点</strong>——仓库里没有 Hexo 源码，所有页面由 <code>.posts/publish.py</code> 从 <code>.posts/*.md</code> 全量重新生成。源文件即真理，派生页面不手工改。</p>
-<pre><code class="language-bash">python3 .posts/publish.py regen --blog /mnt/d/tmp/blog   # 全量重生成
+<pre class="line-numbers language-bash"><code class="language-bash">python3 .posts/publish.py regen --blog /mnt/d/tmp/blog   # 全量重生成
 python3 .posts/publish.py git  --blog /mnt/d/tmp/blog     # regen + commit + push</code></pre>
 <p>每次 <code>regen</code> 会重生成：文章页（含上/下一篇链）、首页卡片、<code>search.xml</code>、<code>atom.xml</code>、归档页（含 ECharts 日历数据重算）、归档年/月页、标签云 + 各标签详情页、分类页。删掉某个 <code>.md</code> 再 regen，对应文章会从所有页面移除。</p>
 <p><strong>文章源文件格式</strong>（<code>.posts/&lt;slug&gt;.md</code>）：</p>
-<pre><code class="language-markdown">---
+<pre class="line-numbers language-markdown"><code class="language-markdown">---
 title: 文章标题
 slug: url-slug
 date: 2026-09-18
@@ -446,7 +447,7 @@ description: SEO 描述
 <p>必填 <code>title</code> / <code>slug</code> / <code>date</code> / <code>cover</code>；封面图在 <code>medias/featureimages/</code> 里选已有的（0-23.jpg）。</p>
 <p><strong>md2html.py 支持的 Markdown 子集</strong>：ATX 标题（<code>##</code>/<code>###</code>/<code>####</code>，自动生成 hexo 风格锚点）、围栏代码块（<code> </code>`<code>lang </code>）、GFM 表格、引用、有序/无序列表、加粗、行内代码、链接、图片、分隔线、<strong>标签平衡的多行 raw HTML 块</strong>（整体透传）。</p>
 <h2 id="串起来：一次完整的"对话变文章""><a href="#串起来：一次完整的"对话变文章"" class="headerlink" title="串起来：一次完整的"对话变文章""></a>串起来：一次完整的"对话变文章"</h2>
-<pre><code class="language-bash"># 1. 提取对话
+<pre class="line-numbers language-bash"><code class="language-bash"># 1. 提取对话
 python3 ~/.config/opencode/skills/chatgpt-conversation-extract/extract_chatgpt.py \
   "https://chatgpt.com/share/&lt;id&gt;" /mnt/d/tmp/conv.txt
 
@@ -462,7 +463,7 @@ python3 .posts/publish.py regen --blog /mnt/d/tmp/blog
 python3 .posts/publish.py git --blog /mnt/d/tmp/blog</code></pre>
 <p>第 2 步是 agent 的核心工作：对话原文是"聊天"，博客文章要有结构——定标题、分章节、去寒暄、补 frontmatter。提取脚本只负责把数据搬出来。</p>
 <p><strong>本地验证</strong>（每次必做，模板结构最容易在这里出问题）：</p>
-<pre><code class="language-bash">python3 -m http.server 8765 --bind 127.0.0.1   # 在博客根目录执行</code></pre>
+<pre class="line-numbers language-bash"><code class="language-bash">python3 -m http.server 8765 --bind 127.0.0.1   # 在博客根目录执行</code></pre>
 <p>用浏览器打开 <code>http://127.0.0.1:8765/&lt;文章路径&gt;/?v=N</code>，检查：</p>
 <ul>
 <li><code>#toc-aside</code> 的父元素是 <code>.row</code>，且与 <code>#main-content</code> 不重叠（目录栏错位是最常见的坑）</li>
@@ -489,7 +490,7 @@ python3 .posts/publish.py git --blog /mnt/d/tmp/blog</code></pre>
 <h2 id="附录：skill-完整文件"><a href="#附录：skill-完整文件" class="headerlink" title="附录：skill 完整文件"></a>附录：skill 完整文件</h2>
 <blockquote><p>三个文件逐字复制到对应路径即可。<code>publish.py</code> / <code>md2html.py</code> / 模板文件随博客仓库同步，在 <code>.posts/</code> 目录下，不需要单独复制。</p></blockquote>
 <h3 id="~/.config/opencode/skills/chatgpt-conversation-extract/SKILL.md"><a href="#~/.config/opencode/skills/chatgpt-conversation-extract/SKILL.md" class="headerlink" title="~/.config/opencode/skills/chatgpt-conversation-extract/SKILL.md"></a><code>~/.config/opencode/skills/chatgpt-conversation-extract/SKILL.md</code></h3>
-<pre><code class="language-markdown">---
+<pre class="line-numbers language-markdown"><code class="language-markdown">---
 name: chatgpt-conversation-extract
 description: 从 ChatGPT 分享链接（https://chatgpt.com/share/&lt;id&gt;）提取完整对话文本。当用户提供 ChatGPT 分享链接并要求读取、整理对话内容、基于对话改简历或归档访谈记录时使用。包含可直接运行的提取脚本。Use when the user shares a chatgpt.com/share URL.
 ---
@@ -521,7 +522,7 @@ python3 ~/.config/opencode/skills/chatgpt-conversation-extract/extract_chatgpt.p
 - 登录墙：静态 HTML 里数据完整，curl 带 UA 即可拿到
 - 判断成功：输出里应包含用户/助手轮流的长文本；若 MESSAGE 过少，检查 URL 是否公开分享</code></pre>
 <h3 id="~/.config/opencode/skills/chatgpt-conversation-extract/extract_chatgpt.py"><a href="#~/.config/opencode/skills/chatgpt-conversation-extract/extract_chatgpt.py" class="headerlink" title="~/.config/opencode/skills/chatgpt-conversation-extract/extract_chatgpt.py"></a><code>~/.config/opencode/skills/chatgpt-conversation-extract/extract_chatgpt.py</code></h3>
-<pre><code class="language-python">#!/usr/bin/env python3
+<pre class="line-numbers language-python"><code class="language-python">#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """Extract conversation text from a ChatGPT share link (chatgpt.com/share/&lt;id&gt;)."""
 import re, json, sys, urllib.request
@@ -587,7 +588,7 @@ if __name__ == "__main__":
     out = sys.argv[2] if len(sys.argv) &gt; 2 else "/mnt/d/tmp/chatgpt_conv.txt"
     sys.exit(main(url, out))</code></pre>
 <h3 id="~/.config/opencode/skills/blog-publish/SKILL.md"><a href="#~/.config/opencode/skills/blog-publish/SKILL.md" class="headerlink" title="~/.config/opencode/skills/blog-publish/SKILL.md"></a><code>~/.config/opencode/skills/blog-publish/SKILL.md</code></h3>
-<pre><code class="language-markdown">---
+<pre class="line-numbers language-markdown"><code class="language-markdown">---
 name: blog-publish
 description: 把 Markdown 文章发布到 Hexo+Matery 静态博客站点（atcXiGua.github.io）。当用户要发博客、加文章、更新文章，或提到 .posts/publish.py、博客仓库、simple life 站点时使用。包含发布脚本与验证流程。Use when the user wants to publish/update a blog post on the static blog site.
 ---
@@ -828,6 +829,7 @@ ATX 标题（自动生成 hexo 风格锚点 headerlink）、围栏代码块、GF
 
 
 <!-- 代码块功能依赖 -->
+<script src="/libs/prism/prism.min.js"></script>
 <script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script>
 
 

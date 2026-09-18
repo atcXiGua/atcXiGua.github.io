@@ -39,6 +39,7 @@
 
 
     <link rel="stylesheet" href="/libs/tocbot/tocbot.css">
+    <link rel="stylesheet" href="/libs/prism/prism.min.css">
     <link rel="stylesheet" href="/css/post.css">
 
 
@@ -405,17 +406,17 @@
 </table>
 <h2 id="部署步骤"><a href="#部署步骤" class="headerlink" title="部署步骤"></a>部署步骤</h2>
 <h3 id="1.-安装依赖"><a href="#1.-安装依赖" class="headerlink" title="1. 安装依赖"></a>1. 安装依赖</h3>
-<pre><code class="language-bash">git clone https://github.com/shengjidaguai-china/BossHunter.git
+<pre class="line-numbers language-bash"><code class="language-bash">git clone https://github.com/shengjidaguai-china/BossHunter.git
 cd BossHunter
 npm --prefix src/bosshunter/web/frontend ci
 npm --prefix src/bosshunter/web/frontend run build
 pip install -e .</code></pre>
 <h3 id="2.-开启-Chrome-远程调试"><a href="#2.-开启-Chrome-远程调试" class="headerlink" title="2. 开启 Chrome 远程调试"></a>2. 开启 Chrome 远程调试</h3>
-<pre><code class="language-bash"># Linux（推荐使用独立用户目录）
+<pre class="line-numbers language-bash"><code class="language-bash"># Linux（推荐使用独立用户目录）
 google-chrome --remote-debugging-port=9222 --user-data-dir="$HOME/.bosshunter-chrome"</code></pre>
 <p>使用独立用户目录时，需要在这个 Chrome 窗口中登录要使用的招聘平台，并保持窗口开启。</p>
 <h3 id="3.-完成本地配置"><a href="#3.-完成本地配置" class="headerlink" title="3. 完成本地配置"></a>3. 完成本地配置</h3>
-<pre><code class="language-bash">bosshunter web</code></pre>
+<pre class="line-numbers language-bash"><code class="language-bash">bosshunter web</code></pre>
 <p>浏览器打开 <code>http://127.0.0.1:8686</code>，完成：</p>
 <ol>
 <li>上传自己的简历（.md、.docx 或带文字层的 .pdf）</li>
@@ -423,10 +424,10 @@ google-chrome --remote-debugging-port=9222 --user-data-dir="$HOME/.bosshunter-ch
 <li>配置 AI 服务商和 API Key（在面板中输入，不要提交到代码仓库）</li>
 </ol>
 <h3 id="4.-检查连接"><a href="#4.-检查连接" class="headerlink" title="4. 检查连接"></a>4. 检查连接</h3>
-<pre><code class="language-bash">bosshunter ai-status
+<pre class="line-numbers language-bash"><code class="language-bash">bosshunter ai-status
 bosshunter connect</code></pre>
 <h3 id="5.-运行"><a href="#5.-运行" class="headerlink" title="5. 运行"></a>5. 运行</h3>
-<pre><code class="language-bash">bosshunter run</code></pre>
+<pre class="line-numbers language-bash"><code class="language-bash">bosshunter run</code></pre>
 <p>完整流程：采集岗位 → AI 评分 → 人工确认投递清单 → 生成招呼语 → 低频发送 → 监听回复。</p>
 <h2 id="实测结果"><a href="#实测结果" class="headerlink" title="实测结果"></a>实测结果</h2>
 <table>
@@ -442,7 +443,7 @@ bosshunter connect</code></pre>
 </table>
 <h2 id="简历管理"><a href="#简历管理" class="headerlink" title="简历管理"></a>简历管理</h2>
 <p>项目本身支持 JD→定制简历，但缺少多简历管理和历史记录。为此自研了 <code>tools/resume_manager.py</code>：</p>
-<pre><code class="language-bash">resume-mgr list                                   # 基础简历列表（* 当前使用）
+<pre class="line-numbers language-bash"><code class="language-bash">resume-mgr list                                   # 基础简历列表（* 当前使用）
 resume-mgr import 简历.docx --use                 # 导入并设为当前
 resume-mgr use 简历.md                            # 切换简历
 resume-mgr tailor --jd jd.txt --title 岗位 --company 公司  # 生成定制简历
@@ -654,6 +655,7 @@ resume-mgr history                                # 定制简历历史</code></p
 
 
 <!-- 代码块功能依赖 -->
+<script src="/libs/prism/prism.min.js"></script>
 <script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script>
 
 

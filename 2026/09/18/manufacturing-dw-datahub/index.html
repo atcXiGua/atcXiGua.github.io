@@ -39,6 +39,7 @@
 
 
     <link rel="stylesheet" href="/libs/tocbot/tocbot.css">
+    <link rel="stylesheet" href="/libs/prism/prism.min.css">
     <link rel="stylesheet" href="/css/post.css">
 
 
@@ -404,7 +405,7 @@
 <h2 id="在本项目中的落地"><a href="#在本项目中的落地" class="headerlink" title="在本项目中的落地"></a>在本项目中的落地</h2>
 <p>POC 里 DataHub 承担三个角色：资产目录、血缘中心、治理入口。采集配置放在 <code>configs/datahub-ingestion.yml</code>，把 Iceberg（ODS/DWD/DWS 各层表）、Doris（ADS 报表）、Kafka（实时 Topic）、Airflow（DAG 任务）的元数据统一抽取进来。</p>
 <p>一套完整的血缘链路在 DataHub 里长这样：</p>
-<pre><code class="language-text">ERP/MES 源表
+<pre class="line-numbers language-text"><code class="language-text">ERP/MES 源表
    │  (SeaTunnel 采集任务)
    ▼
 Kafka Topic: ods_erp
@@ -417,7 +418,7 @@ Iceberg DWD 表 ──▶ Doris ADS 报表</code></pre>
 <p>这条链路上任何一个节点改字段，都能在 DataHub 里向上看影响、向下追溯来源，不用再靠人肉梳理依赖。</p>
 <h2 id="元数据采集：Ingestion-Recipe"><a href="#元数据采集：Ingestion-Recipe" class="headerlink" title="元数据采集：Ingestion Recipe"></a>元数据采集：Ingestion Recipe</h2>
 <p>采集元数据用 YAML Recipe 描述，比如抽取 Iceberg 表的元数据：</p>
-<pre><code class="language-yaml">source:
+<pre class="line-numbers language-yaml"><code class="language-yaml">source:
   type: iceberg
   config:
     platform_instance: manufacturing-dw
@@ -652,6 +653,7 @@ sink:
 
 
 <!-- 代码块功能依赖 -->
+<script src="/libs/prism/prism.min.js"></script>
 <script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script>
 
 

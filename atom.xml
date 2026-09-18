@@ -53,7 +53,7 @@
 <p>ERP/MES/WMS/QMS 这些系统年代跨度大，接口五花八门。SeaTunnel 连接器丰富、支持 CDC（Debezium 模式）实时捕获变更、内置数据质量检查规则，还提供 Web UI 可视化编排 ETL 作业，是统一集成层的合适选择。</p>
 <h2 id="数据流设计：离线-实时双链路"><a href="#数据流设计：离线-实时双链路" class="headerlink" title="数据流设计：离线 + 实时双链路"></a>数据流设计：离线 + 实时双链路</h2>
 <h3 id="离线链路-T-1"><a href="#离线链路-T-1" class="headerlink" title="离线链路 (T+1)"></a>离线链路（T+1）</h3>
-<pre><code class="language-bash">[ERP/MES/WMS/QMS]
+<pre class="line-numbers language-bash"><code class="language-bash">[ERP/MES/WMS/QMS]
        │
        ▼
   [SeaTunnel Sync]
@@ -82,7 +82,7 @@
   [写入 Doris]</code></pre>
 <h3 id="实时链路"><a href="#实时链路" class="headerlink" title="实时链路"></a>实时链路</h3>
 <p>IoT/SCADA 设备数据走另一条路：通过 OPC-UA / MQTT 采集进 Flink DataStream，实时计算 OEE 和告警，结果一路写 Doris Realtime Table 供实时看板，一路以微批写回 Iceberg ODS 归档。</p>
-<pre><code class="language-bash">[IoT/SCADA 设备]
+<pre class="line-numbers language-bash"><code class="language-bash">[IoT/SCADA 设备]
        │ OPC-UA / MQTT
        ▼
   [Flink DataStream]
@@ -95,7 +95,7 @@
        └──▶ [Iceberg ODS (微批)]</code></pre>
 <h2 id="部署方案"><a href="#部署方案" class="headerlink" title="部署方案"></a>部署方案</h2>
 <h3 id="POC-环境：一键-Docker-Compose"><a href="#POC-环境：一键-Docker-Compose" class="headerlink" title="POC 环境：一键 Docker Compose"></a>POC 环境：一键 Docker Compose</h3>
-<pre><code class="language-bash"># 复制环境变量
+<pre class="line-numbers language-bash"><code class="language-bash"># 复制环境变量
 cp docker/.env.example docker/.env
 
 # 启动所有服务
@@ -129,7 +129,7 @@ bash scripts/init_platform.sh</code></pre>
 <p>每个 DAG 里都会先做 <code>create_batch_context</code>（生成批次 ID、同步时间窗）和 <code>validate_connections</code>（校验源系统连通性），失败重试 3 次、单次执行超时 2 小时，跑批失败有邮件告警。</p>
 <h2 id="运维与回滚"><a href="#运维与回滚" class="headerlink" title="运维与回滚"></a>运维与回滚</h2>
 <p>得益于 Iceberg 的时间旅行，数据回滚和 Schema 变更都很轻量：</p>
-<pre><code class="language-sql">-- Schema 变更（向后兼容，天然支持）
+<pre class="line-numbers language-sql"><code class="language-sql">-- Schema 变更（向后兼容，天然支持）
 ALTER TABLE dwd.production_detail ADD COLUMNS (new_column STRING);
 
 -- 时间旅行：回滚到指定快照查数据
@@ -184,7 +184,7 @@ FOR SYSTEM_VERSION AS OF '2026-09-14';</code></pre>
 <h2 id="事实表设计"><a href="#事实表设计" class="headerlink" title="事实表设计"></a>事实表设计</h2>
 <h3 id="生产明细事实表"><a href="#生产明细事实表" class="headerlink" title="生产明细事实表"></a>生产明细事实表</h3>
 <p>粒度是 <strong>设备级 · 分钟级</strong>（每台设备每分钟一条），这是整套模型里粒度最细、数据量最大的表。核心字段：</p>
-<pre><code class="language-sql">-- 产量与质量
+<pre class="line-numbers language-sql"><code class="language-sql">-- 产量与质量
 plan_quantity      DECIMAL(18,2)  -- 计划产量
 actual_quantity    DECIMAL(18,2)  -- 实际产量
 good_quantity      DECIMAL(18,2)  -- 合格产量
@@ -307,7 +307,7 @@ cycle_time_seconds   DECIMAL(10,2)  -- 实际周期时间</code></pre>
 <h2 id="在本项目中的落地"><a href="#在本项目中的落地" class="headerlink" title="在本项目中的落地"></a>在本项目中的落地</h2>
 <p>POC 里 DataHub 承担三个角色：资产目录、血缘中心、治理入口。采集配置放在 <code>configs/datahub-ingestion.yml</code>，把 Iceberg（ODS/DWD/DWS 各层表）、Doris（ADS 报表）、Kafka（实时 Topic）、Airflow（DAG 任务）的元数据统一抽取进来。</p>
 <p>一套完整的血缘链路在 DataHub 里长这样：</p>
-<pre><code class="language-text">ERP/MES 源表
+<pre class="line-numbers language-text"><code class="language-text">ERP/MES 源表
    │  (SeaTunnel 采集任务)
    ▼
 Kafka Topic: ods_erp
@@ -320,7 +320,7 @@ Iceberg DWD 表 ──▶ Doris ADS 报表</code></pre>
 <p>这条链路上任何一个节点改字段，都能在 DataHub 里向上看影响、向下追溯来源，不用再靠人肉梳理依赖。</p>
 <h2 id="元数据采集：Ingestion-Recipe"><a href="#元数据采集：Ingestion-Recipe" class="headerlink" title="元数据采集：Ingestion Recipe"></a>元数据采集：Ingestion Recipe</h2>
 <p>采集元数据用 YAML Recipe 描述，比如抽取 Iceberg 表的元数据：</p>
-<pre><code class="language-yaml">source:
+<pre class="line-numbers language-yaml"><code class="language-yaml">source:
   type: iceberg
   config:
     platform_instance: manufacturing-dw
@@ -375,7 +375,7 @@ sink:
 </ul>
 <p>写这篇文章的目的，是让我<strong>其他 PC 上的 agent 读完就能照着落地</strong>——两个 skill 的完整文件、依赖、每一步操作和所有踩过的坑都在下面。</p>
 <h2 id="环境准备（新-PC-上做一次）"><a href="#环境准备（新-PC-上做一次）" class="headerlink" title="环境准备（新 PC 上做一次）"></a>环境准备（新 PC 上做一次）</h2>
-<pre><code class="language-bash"># 1. 克隆博客仓库（脚本和模板都在仓库的 .posts/ 目录里，随仓库同步）
+<pre class="line-numbers language-bash"><code class="language-bash"># 1. 克隆博客仓库（脚本和模板都在仓库的 .posts/ 目录里，随仓库同步）
 git clone git@github.com:atcXiGua/atcXiGua.github.io.git /mnt/d/tmp/blog
 
 # 2. Python 3.10+，仅需标准库（urllib/re/json/html/yaml 都用标准库，无第三方依赖）
@@ -395,7 +395,7 @@ mkdir -p ~/.config/opencode/skills/chatgpt-conversation-extract</code></pre>
 <p>ChatGPT 分享页是 JS 渲染的，<code>webfetch</code> 直接抓只能拿到标题。但完整对话数据以 <strong>React Server Components（RSC）流</strong>的形式内嵌在 HTML 的 <code>&lt;script&gt;</code> 块里，调用形式是 <code>window.__reactRouterContext.streamController.enqueue("&lt;双重转义JSON&gt;")</code>。</p>
 <p>提取流程：抓 HTML → 找全部 <code>enqueue("...")</code> → <code>json.loads</code> 解一层转义得到 RSC payload → 递归收集全部字符串 → 过滤"长度 &gt;100 且密集含中文"的串 → 得到按顺序的消息。</p>
 <p>实测可用（提取了 4 条完整消息）：</p>
-<pre><code class="language-bash">python3 ~/.config/opencode/skills/chatgpt-conversation-extract/extract_chatgpt.py \
+<pre class="line-numbers language-bash"><code class="language-bash">python3 ~/.config/opencode/skills/chatgpt-conversation-extract/extract_chatgpt.py \
   "https://chatgpt.com/share/&lt;id&gt;" /mnt/d/tmp/chatgpt_conv.txt</code></pre>
 <p>输出是 <code>==== MESSAGE 0 ====</code> 分隔的文本文件，<code>read</code> 它即可进入后续加工。</p>
 <p><strong>已知局限</strong>（提取时心里有数）：</p>
@@ -412,11 +412,11 @@ mkdir -p ~/.config/opencode/skills/chatgpt-conversation-extract</code></pre>
 </table>
 <h2 id="Skill-2：博客自动发布"><a href="#Skill-2：博客自动发布" class="headerlink" title="Skill 2：博客自动发布"></a>Skill 2：博客自动发布</h2>
 <p>站点是 <strong>Hexo + hexo-theme-matery 的纯静态生成站点</strong>——仓库里没有 Hexo 源码，所有页面由 <code>.posts/publish.py</code> 从 <code>.posts/*.md</code> 全量重新生成。源文件即真理，派生页面不手工改。</p>
-<pre><code class="language-bash">python3 .posts/publish.py regen --blog /mnt/d/tmp/blog   # 全量重生成
+<pre class="line-numbers language-bash"><code class="language-bash">python3 .posts/publish.py regen --blog /mnt/d/tmp/blog   # 全量重生成
 python3 .posts/publish.py git  --blog /mnt/d/tmp/blog     # regen + commit + push</code></pre>
 <p>每次 <code>regen</code> 会重生成：文章页（含上/下一篇链）、首页卡片、<code>search.xml</code>、<code>atom.xml</code>、归档页（含 ECharts 日历数据重算）、归档年/月页、标签云 + 各标签详情页、分类页。删掉某个 <code>.md</code> 再 regen，对应文章会从所有页面移除。</p>
 <p><strong>文章源文件格式</strong>（<code>.posts/&lt;slug&gt;.md</code>）：</p>
-<pre><code class="language-markdown">---
+<pre class="line-numbers language-markdown"><code class="language-markdown">---
 title: 文章标题
 slug: url-slug
 date: 2026-09-18
@@ -434,7 +434,7 @@ description: SEO 描述
 <p>必填 <code>title</code> / <code>slug</code> / <code>date</code> / <code>cover</code>；封面图在 <code>medias/featureimages/</code> 里选已有的（0-23.jpg）。</p>
 <p><strong>md2html.py 支持的 Markdown 子集</strong>：ATX 标题（<code>##</code>/<code>###</code>/<code>####</code>，自动生成 hexo 风格锚点）、围栏代码块（<code> </code>`<code>lang </code>）、GFM 表格、引用、有序/无序列表、加粗、行内代码、链接、图片、分隔线、<strong>标签平衡的多行 raw HTML 块</strong>（整体透传）。</p>
 <h2 id="串起来：一次完整的"对话变文章""><a href="#串起来：一次完整的"对话变文章"" class="headerlink" title="串起来：一次完整的"对话变文章""></a>串起来：一次完整的"对话变文章"</h2>
-<pre><code class="language-bash"># 1. 提取对话
+<pre class="line-numbers language-bash"><code class="language-bash"># 1. 提取对话
 python3 ~/.config/opencode/skills/chatgpt-conversation-extract/extract_chatgpt.py \
   "https://chatgpt.com/share/&lt;id&gt;" /mnt/d/tmp/conv.txt
 
@@ -450,7 +450,7 @@ python3 .posts/publish.py regen --blog /mnt/d/tmp/blog
 python3 .posts/publish.py git --blog /mnt/d/tmp/blog</code></pre>
 <p>第 2 步是 agent 的核心工作：对话原文是"聊天"，博客文章要有结构——定标题、分章节、去寒暄、补 frontmatter。提取脚本只负责把数据搬出来。</p>
 <p><strong>本地验证</strong>（每次必做，模板结构最容易在这里出问题）：</p>
-<pre><code class="language-bash">python3 -m http.server 8765 --bind 127.0.0.1   # 在博客根目录执行</code></pre>
+<pre class="line-numbers language-bash"><code class="language-bash">python3 -m http.server 8765 --bind 127.0.0.1   # 在博客根目录执行</code></pre>
 <p>用浏览器打开 <code>http://127.0.0.1:8765/&lt;文章路径&gt;/?v=N</code>，检查：</p>
 <ul>
 <li><code>#toc-aside</code> 的父元素是 <code>.row</code>，且与 <code>#main-content</code> 不重叠（目录栏错位是最常见的坑）</li>
@@ -477,7 +477,7 @@ python3 .posts/publish.py git --blog /mnt/d/tmp/blog</code></pre>
 <h2 id="附录：skill-完整文件"><a href="#附录：skill-完整文件" class="headerlink" title="附录：skill 完整文件"></a>附录：skill 完整文件</h2>
 <blockquote><p>三个文件逐字复制到对应路径即可。<code>publish.py</code> / <code>md2html.py</code> / 模板文件随博客仓库同步，在 <code>.posts/</code> 目录下，不需要单独复制。</p></blockquote>
 <h3 id="~/.config/opencode/skills/chatgpt-conversation-extract/SKILL.md"><a href="#~/.config/opencode/skills/chatgpt-conversation-extract/SKILL.md" class="headerlink" title="~/.config/opencode/skills/chatgpt-conversation-extract/SKILL.md"></a><code>~/.config/opencode/skills/chatgpt-conversation-extract/SKILL.md</code></h3>
-<pre><code class="language-markdown">---
+<pre class="line-numbers language-markdown"><code class="language-markdown">---
 name: chatgpt-conversation-extract
 description: 从 ChatGPT 分享链接（https://chatgpt.com/share/&lt;id&gt;）提取完整对话文本。当用户提供 ChatGPT 分享链接并要求读取、整理对话内容、基于对话改简历或归档访谈记录时使用。包含可直接运行的提取脚本。Use when the user shares a chatgpt.com/share URL.
 ---
@@ -509,7 +509,7 @@ python3 ~/.config/opencode/skills/chatgpt-conversation-extract/extract_chatgpt.p
 - 登录墙：静态 HTML 里数据完整，curl 带 UA 即可拿到
 - 判断成功：输出里应包含用户/助手轮流的长文本；若 MESSAGE 过少，检查 URL 是否公开分享</code></pre>
 <h3 id="~/.config/opencode/skills/chatgpt-conversation-extract/extract_chatgpt.py"><a href="#~/.config/opencode/skills/chatgpt-conversation-extract/extract_chatgpt.py" class="headerlink" title="~/.config/opencode/skills/chatgpt-conversation-extract/extract_chatgpt.py"></a><code>~/.config/opencode/skills/chatgpt-conversation-extract/extract_chatgpt.py</code></h3>
-<pre><code class="language-python">#!/usr/bin/env python3
+<pre class="line-numbers language-python"><code class="language-python">#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """Extract conversation text from a ChatGPT share link (chatgpt.com/share/&lt;id&gt;)."""
 import re, json, sys, urllib.request
@@ -575,7 +575,7 @@ if __name__ == "__main__":
     out = sys.argv[2] if len(sys.argv) &gt; 2 else "/mnt/d/tmp/chatgpt_conv.txt"
     sys.exit(main(url, out))</code></pre>
 <h3 id="~/.config/opencode/skills/blog-publish/SKILL.md"><a href="#~/.config/opencode/skills/blog-publish/SKILL.md" class="headerlink" title="~/.config/opencode/skills/blog-publish/SKILL.md"></a><code>~/.config/opencode/skills/blog-publish/SKILL.md</code></h3>
-<pre><code class="language-markdown">---
+<pre class="line-numbers language-markdown"><code class="language-markdown">---
 name: blog-publish
 description: 把 Markdown 文章发布到 Hexo+Matery 静态博客站点（atcXiGua.github.io）。当用户要发博客、加文章、更新文章，或提到 .posts/publish.py、博客仓库、simple life 站点时使用。包含发布脚本与验证流程。Use when the user wants to publish/update a blog post on the static blog site.
 ---
@@ -654,17 +654,17 @@ ATX 标题（自动生成 hexo 风格锚点 headerlink）、围栏代码块、GF
 </table>
 <h2 id="部署步骤"><a href="#部署步骤" class="headerlink" title="部署步骤"></a>部署步骤</h2>
 <h3 id="1.-安装依赖"><a href="#1.-安装依赖" class="headerlink" title="1. 安装依赖"></a>1. 安装依赖</h3>
-<pre><code class="language-bash">git clone https://github.com/shengjidaguai-china/BossHunter.git
+<pre class="line-numbers language-bash"><code class="language-bash">git clone https://github.com/shengjidaguai-china/BossHunter.git
 cd BossHunter
 npm --prefix src/bosshunter/web/frontend ci
 npm --prefix src/bosshunter/web/frontend run build
 pip install -e .</code></pre>
 <h3 id="2.-开启-Chrome-远程调试"><a href="#2.-开启-Chrome-远程调试" class="headerlink" title="2. 开启 Chrome 远程调试"></a>2. 开启 Chrome 远程调试</h3>
-<pre><code class="language-bash"># Linux（推荐使用独立用户目录）
+<pre class="line-numbers language-bash"><code class="language-bash"># Linux（推荐使用独立用户目录）
 google-chrome --remote-debugging-port=9222 --user-data-dir="$HOME/.bosshunter-chrome"</code></pre>
 <p>使用独立用户目录时，需要在这个 Chrome 窗口中登录要使用的招聘平台，并保持窗口开启。</p>
 <h3 id="3.-完成本地配置"><a href="#3.-完成本地配置" class="headerlink" title="3. 完成本地配置"></a>3. 完成本地配置</h3>
-<pre><code class="language-bash">bosshunter web</code></pre>
+<pre class="line-numbers language-bash"><code class="language-bash">bosshunter web</code></pre>
 <p>浏览器打开 <code>http://127.0.0.1:8686</code>，完成：</p>
 <ol>
 <li>上传自己的简历（.md、.docx 或带文字层的 .pdf）</li>
@@ -672,10 +672,10 @@ google-chrome --remote-debugging-port=9222 --user-data-dir="$HOME/.bosshunter-ch
 <li>配置 AI 服务商和 API Key（在面板中输入，不要提交到代码仓库）</li>
 </ol>
 <h3 id="4.-检查连接"><a href="#4.-检查连接" class="headerlink" title="4. 检查连接"></a>4. 检查连接</h3>
-<pre><code class="language-bash">bosshunter ai-status
+<pre class="line-numbers language-bash"><code class="language-bash">bosshunter ai-status
 bosshunter connect</code></pre>
 <h3 id="5.-运行"><a href="#5.-运行" class="headerlink" title="5. 运行"></a>5. 运行</h3>
-<pre><code class="language-bash">bosshunter run</code></pre>
+<pre class="line-numbers language-bash"><code class="language-bash">bosshunter run</code></pre>
 <p>完整流程：采集岗位 → AI 评分 → 人工确认投递清单 → 生成招呼语 → 低频发送 → 监听回复。</p>
 <h2 id="实测结果"><a href="#实测结果" class="headerlink" title="实测结果"></a>实测结果</h2>
 <table>
@@ -691,7 +691,7 @@ bosshunter connect</code></pre>
 </table>
 <h2 id="简历管理"><a href="#简历管理" class="headerlink" title="简历管理"></a>简历管理</h2>
 <p>项目本身支持 JD→定制简历，但缺少多简历管理和历史记录。为此自研了 <code>tools/resume_manager.py</code>：</p>
-<pre><code class="language-bash">resume-mgr list                                   # 基础简历列表（* 当前使用）
+<pre class="line-numbers language-bash"><code class="language-bash">resume-mgr list                                   # 基础简历列表（* 当前使用）
 resume-mgr import 简历.docx --use                 # 导入并设为当前
 resume-mgr use 简历.md                            # 切换简历
 resume-mgr tailor --jd jd.txt --title 岗位 --company 公司  # 生成定制简历

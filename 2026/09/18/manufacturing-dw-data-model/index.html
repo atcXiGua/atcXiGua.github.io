@@ -39,6 +39,7 @@
 
 
     <link rel="stylesheet" href="/libs/tocbot/tocbot.css">
+    <link rel="stylesheet" href="/libs/prism/prism.min.css">
     <link rel="stylesheet" href="/css/post.css">
 
 
@@ -414,7 +415,7 @@
 <h2 id="事实表设计"><a href="#事实表设计" class="headerlink" title="事实表设计"></a>事实表设计</h2>
 <h3 id="生产明细事实表"><a href="#生产明细事实表" class="headerlink" title="生产明细事实表"></a>生产明细事实表</h3>
 <p>粒度是 <strong>设备级 · 分钟级</strong>（每台设备每分钟一条），这是整套模型里粒度最细、数据量最大的表。核心字段：</p>
-<pre><code class="language-sql">-- 产量与质量
+<pre class="line-numbers language-sql"><code class="language-sql">-- 产量与质量
 plan_quantity      DECIMAL(18,2)  -- 计划产量
 actual_quantity    DECIMAL(18,2)  -- 实际产量
 good_quantity      DECIMAL(18,2)  -- 合格产量
@@ -699,6 +700,7 @@ cycle_time_seconds   DECIMAL(10,2)  -- 实际周期时间</code></pre>
 
 
 <!-- 代码块功能依赖 -->
+<script src="/libs/prism/prism.min.js"></script>
 <script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script>
 
 

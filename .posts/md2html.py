@@ -113,8 +113,9 @@ def convert(md):
                 code.append(lines[i]); i += 1
             i += 1  # skip closing fence
             cls = f' class="language-{lang}"' if lang else ''
+            pre_cls = f' class="line-numbers language-{lang}"' if lang else ''
             code_text = _esc('\n'.join(code))
-            out.append(f'<pre><code{cls}>{code_text}</code></pre>')
+            out.append(f'<pre{pre_cls}><code{cls}>{code_text}</code></pre>')
             continue
 
         # table

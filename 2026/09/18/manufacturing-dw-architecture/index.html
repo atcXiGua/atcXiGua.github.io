@@ -39,6 +39,7 @@
 
 
     <link rel="stylesheet" href="/libs/tocbot/tocbot.css">
+    <link rel="stylesheet" href="/libs/prism/prism.min.css">
     <link rel="stylesheet" href="/css/post.css">
 
 
@@ -414,7 +415,7 @@
 <p>ERP/MES/WMS/QMS 这些系统年代跨度大，接口五花八门。SeaTunnel 连接器丰富、支持 CDC（Debezium 模式）实时捕获变更、内置数据质量检查规则，还提供 Web UI 可视化编排 ETL 作业，是统一集成层的合适选择。</p>
 <h2 id="数据流设计：离线-实时双链路"><a href="#数据流设计：离线-实时双链路" class="headerlink" title="数据流设计：离线 + 实时双链路"></a>数据流设计：离线 + 实时双链路</h2>
 <h3 id="离线链路-T-1"><a href="#离线链路-T-1" class="headerlink" title="离线链路 (T+1)"></a>离线链路（T+1）</h3>
-<pre><code class="language-bash">[ERP/MES/WMS/QMS]
+<pre class="line-numbers language-bash"><code class="language-bash">[ERP/MES/WMS/QMS]
        │
        ▼
   [SeaTunnel Sync]
@@ -443,7 +444,7 @@
   [写入 Doris]</code></pre>
 <h3 id="实时链路"><a href="#实时链路" class="headerlink" title="实时链路"></a>实时链路</h3>
 <p>IoT/SCADA 设备数据走另一条路：通过 OPC-UA / MQTT 采集进 Flink DataStream，实时计算 OEE 和告警，结果一路写 Doris Realtime Table 供实时看板，一路以微批写回 Iceberg ODS 归档。</p>
-<pre><code class="language-bash">[IoT/SCADA 设备]
+<pre class="line-numbers language-bash"><code class="language-bash">[IoT/SCADA 设备]
        │ OPC-UA / MQTT
        ▼
   [Flink DataStream]
@@ -456,7 +457,7 @@
        └──▶ [Iceberg ODS (微批)]</code></pre>
 <h2 id="部署方案"><a href="#部署方案" class="headerlink" title="部署方案"></a>部署方案</h2>
 <h3 id="POC-环境：一键-Docker-Compose"><a href="#POC-环境：一键-Docker-Compose" class="headerlink" title="POC 环境：一键 Docker Compose"></a>POC 环境：一键 Docker Compose</h3>
-<pre><code class="language-bash"># 复制环境变量
+<pre class="line-numbers language-bash"><code class="language-bash"># 复制环境变量
 cp docker/.env.example docker/.env
 
 # 启动所有服务
@@ -490,7 +491,7 @@ bash scripts/init_platform.sh</code></pre>
 <p>每个 DAG 里都会先做 <code>create_batch_context</code>（生成批次 ID、同步时间窗）和 <code>validate_connections</code>（校验源系统连通性），失败重试 3 次、单次执行超时 2 小时，跑批失败有邮件告警。</p>
 <h2 id="运维与回滚"><a href="#运维与回滚" class="headerlink" title="运维与回滚"></a>运维与回滚</h2>
 <p>得益于 Iceberg 的时间旅行，数据回滚和 Schema 变更都很轻量：</p>
-<pre><code class="language-sql">-- Schema 变更（向后兼容，天然支持）
+<pre class="line-numbers language-sql"><code class="language-sql">-- Schema 变更（向后兼容，天然支持）
 ALTER TABLE dwd.production_detail ADD COLUMNS (new_column STRING);
 
 -- 时间旅行：回滚到指定快照查数据
@@ -697,6 +698,7 @@ FOR SYSTEM_VERSION AS OF '2026-09-14';</code></pre>
 
 
 <!-- 代码块功能依赖 -->
+<script src="/libs/prism/prism.min.js"></script>
 <script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script>
 
 
